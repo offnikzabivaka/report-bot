@@ -2,518 +2,315 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Корректное заполнение отчёта By.Aiven</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report System</title>
     <style>
         :root {
-            --bg-color: #0a0a0a;
-            --panel-bg: rgba(20, 20, 20, 0.95);
-            --text-color: #e0e0e0;
-            --accent-color: #00e5ff;
-            --border-color: #333;
-            --input-bg: #161616;
-            --input-text: #fff;
+            --primary: #00f2fe;
+            --secondary: #4facfe;
+            --bg-glass: rgba(255, 255, 255, 0.06);
+            --border-glass: rgba(255, 255, 255, 0.1);
+            --text: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
-            margin: 0; padding: 10px; background: var(--bg-color); color: var(--text-color);
-            font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center;
-            min-height: 100vh; box-sizing: border-box; overflow-x: hidden; transition: background 0.3s, color 0.3s;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url('money.gif') no-repeat center center fixed;
+            background-size: cover;
+            padding: 20px;
+            overflow-y: auto;
+            position: relative;
         }
 
-        #bg-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
-        .bg-gif { width: 100%; height: 100%; background: url('money.gif') center/cover no-repeat; opacity: 0.35; display: none; }
-        canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; }
-
-        body.theme-money {
-            --bg-color: #050505; --panel-bg: rgba(15, 15, 15, 0.98); --text-color: #ffffff; --accent-color: #00ffcc; --border-color: #00ffcc; --input-bg: #101010; --input-text: #ffffff;
-        }
-        body.theme-sakura {
-            --bg-color: #fff0f2; --panel-bg: rgba(255, 235, 238, 0.96); --text-color: #4a282c; --accent-color: #ff527b; --border-color: #ffb3c1; --input-bg: #ffffff; --input-text: #4a282c;
-        }
-        body.theme-dark {
-            --bg-color: #121212; --panel-bg: #1e1e1e; --text-color: #e0e0e0; --accent-color: #bb86fc; --border-color: #444; --input-bg: #2d2d2d; --input-text: #fff;
-        }
-        body.theme-light {
-            --bg-color: #f5f5f5; --panel-bg: #ffffff; --text-color: #333333; --accent-color: #1976d2; --border-color: #cccccc; --input-bg: #f0f0f0; --input-text: #333333;
+        /* Задний темный слой для читаемости, если гифка яркая */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(10, 10, 15, 0.75);
+            z-index: 1;
         }
 
-        .main-panel {
-            width: 100%; max-width: 430px; background: var(--panel-bg);
-            padding: 15px; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.6);
-            border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 10px;
-            box-sizing: border-box; z-index: 2; transition: background 0.3s, border 0.3s;
+        .container {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 550px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glass);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
         }
 
-        .title-spacing { height: 10px; }
-        h3 { margin: 2px 0 1px 0; color: #ffb300; font-size: 12px; text-transform: uppercase; }
-        body.theme-sakura h3 { color: #c2185b; }
-        
-        .row { display: flex; flex-direction: column; gap: 4px; }
-        .row-inline { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-        
-        label { font-size: 11px; color: var(--text-color); opacity: 0.85; font-weight: 600; }
-        .warning-text { font-size: 10px; color: #ff5252; font-weight: bold; margin-bottom: -2px; text-transform: uppercase; }
-        body.theme-sakura .warning-text { color: #d32f2f; }
-        
-        input[type="text"], select, textarea {
-            background: var(--input-bg); border: 1px solid var(--border-color); color: var(--input-text);
-            padding: 7px 9px; border-radius: 6px; font-size: 13px; transition: all 0.2s; box-sizing: border-box;
+        h2 {
+            color: var(--text);
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-size: 24px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        input[type="text"]:focus, select:focus, textarea:focus { border-color: var(--accent-color); outline: none; box-shadow: 0 0 5px var(--accent-color); }
-        
-        textarea { resize: vertical; min-height: 45px; font-family: inherit; }
 
-        .theme-selector { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 2px; background: rgba(0,0,0,0.2); padding: 4px; border-radius: 6px; }
-        .theme-btn { flex: 1; min-width: 65px; padding: 5px; font-size: 10px; font-weight: bold; border: 1px solid var(--border-color); border-radius: 4px; cursor: pointer; background: var(--input-bg); color: var(--input-text); text-align: center; }
-        .theme-btn:hover { background: var(--accent-color); color: #000; }
-
-        .dmf-btn {
-            flex: 1; background: #222; border: 1px solid #444; color: #fff;
-            padding: 7px; font-weight: bold; border-radius: 6px; cursor: pointer; font-size: 13px;
+        .input-group {
+            margin-bottom: 20px;
         }
-        .dmf-btn.active.plus { background: #1b5e20; border-color: #4caf50; color: #fff; }
-        .dmf-btn.active.minus { background: #b71c1c; border-color: #f44336; color: #fff; }
 
-        .fast-btn {
-            background: var(--input-bg); border: 1px solid var(--border-color); color: var(--input-text);
-            padding: 5px 8px; border-radius: 5px; cursor: pointer; font-size: 11px;
+        .input-group label {
+            display: block;
+            color: #ccc;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
         }
-        .fast-btn:hover { border-color: var(--accent-color); }
-        
-        .toggle-group { display: flex; gap: 4px; background: var(--input-bg); padding: 2px; border-radius: 6px; border: 1px solid var(--border-color); width: 100%; box-sizing: border-box; }
-        .toggle-btn { flex: 1; text-align: center; padding: 5px; font-size: 11px; font-weight: bold; cursor: pointer; border-radius: 4px; color: #777; }
-        .toggle-btn.active.good { background: #2e7d32; color: #fff; }
-        .toggle-btn.active.bad { background: #c62828; color: #fff; }
 
-        .error-border { border-color: #ff5252 !important; background: rgba(255, 82, 82, 0.1) !important; }
-        
-        .preview-box {
-            display: none; background: #000; border: 1px solid var(--border-color); border-radius: 6px;
-            padding: 10px; font-family: monospace; font-size: 12px; color: #00ff00;
-            white-space: pre-wrap; word-break: break-all; max-height: 140px; overflow-y: auto; margin-top: 2px;
+        .input-group input[type="text"],
+        .input-group input[type="password"],
+        .input-group textarea {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            color: var(--text);
+            font-size: 16px;
+            transition: all 0.3s ease;
+            outline: none;
         }
-        body.theme-sakura .preview-box { background: #fff0f2; color: #4a282c; }
-        body.theme-light .preview-box { background: #fafafa; color: #333; }
-        body.theme-money .preview-box { color: #fff; border-color: var(--accent-color); }
-        body.theme-dark .preview-box { color: #e0e0e0; }
 
-        .action-btn { width: 100%; border: none; padding: 9px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; transition: 0.15s; color: white; }
-        .btn-basis { background: #1b5e20; } .btn-basis:hover { background: #2e7d32; }
-        .btn-part2 { background: #e65100; } .btn-part2:hover { background: #f57c00; }
-        .btn-full { background: #0d47a1; } .btn-full:hover { background: #1565c0; }
-        .btn-preview { background: var(--input-bg); border: 1px solid var(--border-color); color: var(--accent-color); }
-        .btn-clear { background: #37474f; margin-top: 2px; } .btn-clear:hover { background: #455a64; }
-        
-        /* Стили для маленьких локальных кнопок */
-        .btn-small-copy {
-            width: 100%; padding: 6px; font-size: 11px; font-weight: bold; border: none; border-radius: 5px; cursor: pointer; color: white; transition: 0.15s; margin-top: 2px;
+        .input-group input:focus,
+        .input-group textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 12px rgba(0, 242, 254, 0.2);
         }
-        .btn-small-copy.basis { background: #2e7d32; } .btn-small-copy.basis:hover { background: #388e3c; }
-        .btn-small-copy.part2 { background: #ef6c00; } .btn-small-copy.part2:hover { background: #f57c00; }
 
-        .action-btn:disabled, .btn-small-copy:disabled { background: #222 !important; color: #555 !important; cursor: not-allowed; border: 1px solid #333 !important; }
-        body.theme-light .action-btn:disabled, body.theme-light .btn-small-copy:disabled { background: #e0e0e0 !important; color: #999 !important; border: 1px solid #ccc !important; }
-        .divider { border-top: 1px dashed var(--border-color); margin: 4px 0; }
-        
-        .nick-input-container { display: flex; align-items: center; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 6px; padding-left: 10px; }
-        .nick-prefix { font-size: 13px; font-weight: bold; color: var(--accent-color); padding-right: 8px; user-select: none; }
-        .nick-input-container input { flex: 1; border: none !important; background: transparent !important; padding-left: 0 !important; }
-
-        .footer-credits {
-            text-align: center; font-size: 10px; margin-top: 5px; opacity: 0.7; color: var(--text-color);
+        /* Стили для чекбоксов документов */
+        .docs-container {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            padding: 15px;
+            max-height: 150px;
+            overflow-y: auto;
         }
-        .footer-credits a { color: var(--accent-color); text-decoration: none; font-weight: bold; }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            cursor: pointer;
+            color: #ddd;
+            font-size: 15px;
+        }
+
+        .checkbox-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .checkbox-item input {
+            margin-right: 12px;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        button {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(45deg, var(--secondary), var(--primary));
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 242, 254, 0.6);
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        /* Панель администратора */
+        .admin-panel {
+            margin-top: 35px;
+            padding-top: 25px;
+            border-top: 2px dashed rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-title {
+            color: #ff416c;
+            background: linear-gradient(45deg, #ff416c, #ff4b2b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 18px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .status-list {
+            list-style: none;
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 65, 108, 0.1);
+            border: 1px solid rgba(255, 65, 108, 0.2);
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .status-online {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #00ff66;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #00ff66;
+            margin-right: 6px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
     </style>
 </head>
-<body class="theme-money">
+<body>
 
-    <div id="bg-container">
-        <div class="bg-gif" id="money-bg" style="display: block;"></div>
-        <canvas id="canvas-sakura"></canvas>
+    <!-- ОКНО АВТОРИЗАЦИИ -->
+    <div id="auth-block" class="container">
+        <h2>Авторизация</h2>
+        <div class="input-group">
+            <label for="username">Ваш Стейдж (Имя)</label>
+            <input type="text" id="username" placeholder="Введите имя...">
+        </div>
+        <div class="input-group">
+            <label for="password">Пароль</label>
+            <input type="password" id="password" placeholder="••••">
+        </div>
+        <button onclick="login()">Войти</button>
     </div>
 
-    <div class="main-panel">
-        <!-- СЕЛЕКТОР ТЕМ -->
-        <div class="theme-selector">
-            <button class="theme-btn" onclick="changeTheme('money')">💰 Деньги</button>
-            <button class="theme-btn" onclick="changeTheme('sakura')">🌸 Сакура</button>
-            <button class="theme-btn" onclick="changeTheme('dark')">🌙 Темная</button>
-            <button class="theme-btn" onclick="changeTheme('light')">☀️ Светлая</button>
-        </div>
-
-        <div class="title-spacing"></div>
+    <!-- ОСНОВНОЙ ИНТЕРФЕЙС (СКРЫТ ДО ВХОДА) -->
+    <div id="main-block" class="container hidden">
+        <h2 id="welcome-title">Рабочая область</h2>
         
-        <!-- НИК -->
-        <div class="row">
-            <label>Твой ник:</label>
-            <div class="nick-input-container">
-                <span class="nick-prefix">Холодник</span>
-                <input type="text" id="username_custom" placeholder="Александр" oninput="saveNick(); validateForm();">
+        <form id="report-form" onsubmit="sendReport(event)">
+            <div class="input-group">
+                <label>Какие документы добавить в отчёт?</label>
+                <div class="docs-container">
+                    <label class="checkbox-item"><input type="checkbox" value="Договор купли-продажи"> Договор купли-продажи</label>
+                    <label class="checkbox-item"><input type="checkbox" value="Акт приема-передачи"> Акт приема-передачи</label>
+                    <label class="checkbox-item"><input type="checkbox" value="Счет-фактура"> Счет-фактура</label>
+                    <label class="checkbox-item"><input type="checkbox" value="Накладная"> Накладная</label>
+                    <label class="checkbox-item"><input type="checkbox" value="Дополнительное соглашение"> Дополнительное соглашение</label>
+                </div>
             </div>
-        </div>
 
-        <div class="divider"></div>
-        <h3>Часть 1: Основа</h3>
-
-        <!-- БАЗА С ВОРНИНГОМ -->
-        <div class="row">
-            <div class="warning-text">⚠️ Внимательно смотри, какую базу звонил!</div>
-            <label>База:</label>
-            <select id="base_select" onchange="toggleBaseInput(); validateForm();">
-                <option value="База ЦРМ">База ЦРМ</option>
-                <option value="База ИП ЦРМ">База ИП ЦРМ</option>
-                <option value="custom">Ручной ввод...</option>
-            </select>
-            <input type="text" id="base_custom" placeholder="База ИП Андрей" style="display:none; margin-top:4px;" oninput="validateForm();">
-        </div>
-
-        <!-- ДМФ КАССЕТКА -->
-        <div class="row">
-            <label>ДМФ сип кассетка:</label>
-            <div class="row-inline">
-                <button class="dmf-btn" id="dmf-plus" onclick="setDmf('+')">[ + ]</button>
-                <button class="dmf-btn" id="dmf-minus" onclick="setDmf('-')">[ - ]</button>
+            <div class="input-group">
+                <label for="report-text">Текст отчёта / Комментарий</label>
+                <textarea id="report-text" rows="4" placeholder="Опишите проделанную работу..." required></textarea>
             </div>
-        </div>
 
-        <!-- ФИО И ДАТА -->
-        <div class="row">
-            <label>ФИО и Дата рождения:</label>
-            <input type="text" id="fio_date" placeholder="Петров Алексей Владимирович 12.08.1995" oninput="processFIO(); validateForm();">
-        </div>
+            <button type="submit">Отправить отчёт</button>
+        </form>
 
-        <!-- НОМЕР ТЕЛЕФОНА И ОПЕРАТОР -->
-        <div class="row">
-            <label>Номер телефона и Оператор:</label>
-            <div class="row-inline">
-                <input type="text" id="client_phone" placeholder="+79008889911" style="flex: 1; min-width: 140px;" oninput="validateForm();">
-                <select id="operator_select" onchange="toggleOperatorInput(); validateForm();" style="width: 110px;">
-                    <option value="МТС">МТС</option>
-                    <option value="Мегафон">Мегафон</option>
-                    <option value="Билайн">Билайн</option>
-                    <option value="Теле2">Теле2</option>
-                    <option value="Йота">Йота</option>
-                    <option value="custom">Свой...</option>
-                </select>
+        <!-- АДМИН ПАНЕЛЬ (СКРЫТА ДЛЯ ОБЫЧНЫХ) -->
+        <div id="admin-block" class="admin-panel hidden">
+            <div class="admin-title">Панель управления (Айвен)</div>
+            <div class="input-group">
+                <label style="color: #ff4b2b;">Активность на сайте (Демо-режим):</label>
+                <ul class="status-list">
+                    <li class="status-item">
+                        <span><span class="status-online"></span> Сотрудник Алекс</span>
+                        <span style="color: #aaa;">Онлайн</span>
+                    </li>
+                    <li class="status-item">
+                        <span><span class="status-online"></span> Сотрудник Мария</span>
+                        <span style="color: #aaa;">Заполнила отчёт 5м назад</span>
+                    </li>
+                </ul>
             </div>
-            <input type="text" id="operator_custom" placeholder="Введи оператора вручную" style="display:none; margin-top:4px;" oninput="validateForm();">
-        </div>
-
-        <!-- КОД И ОРГ -->
-        <div class="row">
-            <label>Код и Организация (Если не Дом Лента/Мастер — пиши вручную):</label>
-            <div class="row-inline">
-                <input type="text" id="client_code" placeholder="4567" style="width: 55px;" oninput="validateForm();">
-                <input type="text" id="code_org" placeholder="Дом Лента" style="flex:1; min-width: 110px;" oninput="validateForm();">
-                <button class="fast-btn" onclick="setOrg('Дом Лента')">Дом Лента</button>
-                <button class="fast-btn" onclick="setOrg('Мастер')">Мастер</button>
-            </div>
-        </div>
-
-        <!-- ДОКУМЕНТ -->
-        <div class="row">
-            <label>Документ:</label>
-            <div class="row-inline">
-                <select id="doc_type" onchange="switchDocType(); validateForm();" style="width: 110px;">
-                    <option value="snils">СНИЛС (11)</option>
-                    <option value="passport">Паспорт (10)</option>
-                    <option value="inn">ИНН (12)</option>
-                </select>
-                <input type="text" id="doc_value" placeholder="11 цифр" style="flex:1; min-width: 140px;" oninput="validateForm();">
-            </div>
-        </div>
-
-        <!-- НА РУССКОМ -->
-        <div class="row">
-            <label>На русском:</label>
-            <div class="toggle-group">
-                <div class="toggle-btn active good" id="lang-good" onclick="setLang(true)">хорошо</div>
-                <div class="toggle-btn" id="lang-bad" onclick="setLang(false)">плохо</div>
-            </div>
-        </div>
-
-        <!-- КНОПКА СКОПИРОВАТЬ ОСНОВУ СРАЗУ ПОД НЕЙ -->
-        <button class="btn-small-copy basis" id="btn-copy-basis" disabled onclick="copyReport('basis')">📋 СКОПИРОВАТЬ ОСНОВУ</button>
-
-        <div class="divider"></div>
-        <h3>Часть 2: Доп. Инфо</h3>
-
-        <!-- ПОЛЯ С ПОДСКАЗКАМИ -->
-        <div class="row">
-            <label>Почта:</label>
-            <input type="text" id="email" placeholder="example@mail.ru" oninput="validateForm();">
-        </div>
-        <div class="row">
-            <label>Мой номер (Обязательно укажи детали после номера!):</label>
-            <input type="text" id="my_phone" placeholder="+79225556677 10:20 1:45" oninput="validateForm();">
-        </div>
-        <div class="row">
-            <label>Описание:</label>
-            <textarea id="description" placeholder="без возражений, фио совпадает" oninput="validateForm();"></textarea>
-        </div>
-
-        <!-- КНОПКА СКОПИРОВАТЬ ВТОРУЮ ЧАСТЬ СРАЗУ ПОД НЕЙ -->
-        <button class="btn-small-copy part2" id="btn-copy-part2" disabled onclick="copyReport('part2')">🔸 СКОПИРОВАТЬ ВТОРУЮ ЧАСТЬ</button>
-
-        <!-- ОБЩИЕ ФИНАЛЬНЫЕ КНОПКИ -->
-        <div class="divider"></div>
-        <button class="action-btn btn-full" id="btn-full-btn" disabled onclick="copyReport('full')">🚀 СКОПИРОВАТЬ ПОЛНЫЙ ОТЧЕТ</button>
-        <button class="action-btn btn-preview" onclick="togglePreview()">👁 ПОКАЗАТЬ / СКРЫТЬ ПРЕВЬЮ</button>
-        <div class="preview-box" id="preview-output"></div>
-        <button class="action-btn btn-clear" onclick="clearForm()">🧹 ОЧИСТИТЬ ФОРМУ</button>
-
-        <div class="footer-credits">
-            Нашли баг или есть идея? ТГ: <a href="https://t.me/x007am98" target="_blank">@x007am98</a>
         </div>
     </div>
 
-<script>
-    let dmfSelection = '';
-    let isRussianGood = true;
-    let activeAnimation = null;
+    <script>
+        let currentUser = "";
 
-    window.onload = function() {
-        if(localStorage.getItem('saved_only_name')) {
-            document.getElementById('username_custom').value = localStorage.getItem('saved_only_name');
-        }
-        if(localStorage.getItem('saved_theme')) {
-            changeTheme(localStorage.getItem('saved_theme'));
-        } else {
-            changeTheme('money');
-        }
-        validateForm();
-    }
+        function login() {
+            const user = document.getElementById('username').value.trim();
+            const pass = document.getElementById('password').value.trim();
 
-    function saveNick() { 
-        localStorage.setItem('saved_only_name', document.getElementById('username_custom').value); 
-    }
-
-    function processFIO() {
-        const input = document.getElementById('fio_date');
-        let val = input.value;
-        
-        const dateRegex = /(\b\d{2}\.\d{2}\.\d{4})$/;
-        let matchedDate = val.match(dateRegex);
-        let dateStr = matchedDate ? matchedDate[1] : "";
-        let textStr = matchedDate ? val.replace(dateRegex, '') : val;
-
-        let normalizedText = textStr.toLowerCase().replace(/(^|\s)\S/g, function(l) { return l.toUpperCase(); });
-        let finalVal = normalizedText.trim() + (dateStr ? " " + dateStr : "");
-        
-        if(val.toUpperCase() === finalVal.toUpperCase() && val !== finalVal) {
-            let start = input.selectionStart;
-            input.value = finalVal;
-            input.setSelectionRange(start, start);
-        }
-    }
-    
-    function setDmf(val) {
-        dmfSelection = val;
-        document.getElementById('dmf-plus').className = val === '+' ? 'dmf-btn active plus' : 'dmf-btn';
-        document.getElementById('dmf-minus').className = val === '-' ? 'dmf-btn active minus' : 'dmf-btn';
-        validateForm();
-    }
-
-    function setLang(isGood) {
-        isRussianGood = isGood;
-        document.getElementById('lang-good').className = isGood ? 'toggle-btn active good' : 'toggle-btn';
-        document.getElementById('lang-bad').className = !isGood ? 'toggle-btn active bad' : 'toggle-btn';
-        validateForm();
-    }
-
-    function toggleBaseInput() {
-        const select = document.getElementById('base_select');
-        document.getElementById('base_custom').style.display = select.value === 'custom' ? 'block' : 'none';
-    }
-
-    function toggleOperatorInput() {
-        const select = document.getElementById('operator_select');
-        document.getElementById('operator_custom').style.display = select.value === 'custom' ? 'block' : 'none';
-    }
-
-    function setOrg(name) { document.getElementById('code_org').value = name; validateForm(); }
-    
-    function switchDocType() {
-        const docType = document.getElementById('doc_type').value;
-        if(docType === 'snils') document.getElementById('doc_value').placeholder = '11 цифр';
-        else if(docType === 'passport') document.getElementById('doc_value').placeholder = '10 цифр';
-        else document.getElementById('doc_value').placeholder = '12 цифр';
-    }
-
-    function togglePreview() {
-        const box = document.getElementById('preview-output');
-        box.style.display = box.style.display === 'block' ? 'none' : 'block';
-    }
-
-    function clearForm() {
-        document.getElementById('base_select').value = 'База ЦРМ';
-        document.getElementById('base_custom').value = '';
-        document.getElementById('base_custom').style.display = 'none';
-        setDmf('');
-        document.getElementById('fio_date').value = '';
-        document.getElementById('fio_date').classList.remove('error-border');
-        document.getElementById('client_phone').value = '';
-        document.getElementById('client_phone').classList.remove('error-border');
-        document.getElementById('operator_select').value = 'МТС';
-        document.getElementById('operator_custom').value = '';
-        document.getElementById('operator_custom').style.display = 'none';
-        document.getElementById('client_code').value = '';
-        document.getElementById('code_org').value = '';
-        document.getElementById('doc_type').value = 'snils';
-        document.getElementById('doc_value').value = '';
-        document.getElementById('doc_value').placeholder = '11 цифр';
-        document.getElementById('doc_value').classList.remove('error-border');
-        setLang(true);
-        document.getElementById('email').value = '';
-        document.getElementById('my_phone').value = '';
-        document.getElementById('description').value = '';
-        validateForm();
-    }
-
-    function getReportData() {
-        const namePart = document.getElementById('username_custom').value.trim();
-        const finalNick = namePart ? "Холодник " + namePart : "";
-
-        const baseSelect = document.getElementById('base_select').value;
-        const baseCustom = document.getElementById('base_custom').value.trim();
-        const finalBase = baseSelect === 'custom' ? baseCustom : baseSelect;
-
-        const phoneNum = document.getElementById('client_phone').value.trim();
-        const opSelect = document.getElementById('operator_select').value;
-        const opCustom = document.getElementById('operator_custom').value.trim();
-        const finalOperator = opSelect === 'custom' ? opCustom : opSelect;
-        const finalPhoneLine = phoneNum + (finalOperator ? " " + finalOperator : "");
-
-        const fioDate = document.getElementById('fio_date').value.trim();
-        const clientCode = document.getElementById('client_code').value.trim();
-        const codeOrg = document.getElementById('code_org').value.trim();
-        
-        const docType = document.getElementById('doc_type').value;
-        const docValue = document.getElementById('doc_value').value.trim().replace(/\D/g, '');
-        
-        let displayDocLabel = 'СНИЛС';
-        if(docType === 'passport') displayDocLabel = 'Паспорт';
-        if(docType === 'inn') displayDocLabel = 'ИНН';
-
-        // Вот здесь была внесена правка: добавлено "ФИО: "
-        let part1 = `${finalBase || '...'}\n${finalNick || '...'}\nДМФ сип кассетка ${dmfSelection || '...'}\nФИО: ${fioDate || '...'}\nНомер телефона: ${finalPhoneLine || '...'}\nКод который он дал ${clientCode || '...'} ${codeOrg || '...'}\n${displayDocLabel} ${docValue || '...'}\nНа русском : ${isRussianGood ? 'хорошо' : 'плохо'}`;
-
-        let rawEmail = document.getElementById('email').value.trim();
-        let rawMyPhone = document.getElementById('my_phone').value.trim();
-        let rawDesc = document.getElementById('description').value.trim();
-
-        let part2 = `Почта: ${rawEmail || '...'}\nМой номер: ${rawMyPhone || '...'}\nОписание: ${rawDesc || '...'}`;
-
-        return { part1, part2, namePart, finalBase, phoneNum, finalOperator, fioDate, clientCode, codeOrg, docType, docValue, rawEmail, rawMyPhone, rawDesc };
-    }
-
-    function validateForm() {
-        const d = getReportData();
-        let basisValid = true;
-        let part2Valid = true;
-
-        const dateRegex = /\b\d{2}\.\d{2}\.\d{4}$/;
-        const wordsCount = d.fioDate.replace(dateRegex, '').trim().split(/\s+/).filter(Boolean).length;
-        const isFioValid = dateRegex.test(d.fioDate) && wordsCount >= 3;
-        if(d.fioDate) document.getElementById('fio_date').classList.toggle('error-border', !isFioValid);
-
-        const isPhoneValid = d.phoneNum.startsWith('+') && d.phoneNum.length >= 11;
-        if(d.phoneNum) document.getElementById('client_phone').classList.toggle('error-border', !isPhoneValid);
-
-        let isDocValid = false;
-        if(d.docType === 'snils' && d.docValue.length === 11) isDocValid = true;
-        if(d.docType === 'passport' && d.docValue.length === 10) isDocValid = true;
-        if(d.docType === 'inn' && d.docValue.length === 12) isDocValid = true;
-        if(d.docValue) document.getElementById('doc_value').classList.toggle('error-border', !isDocValid);
-
-        const phoneWithDetailsRegex = /^\+?\d{10,12}\s+\S+/;
-        const isMyPhoneFilledCorrectly = phoneWithDetailsRegex.test(d.rawMyPhone);
-
-        if(!d.namePart || !d.finalBase || !dmfSelection || !isFioValid || !isPhoneValid || !d.finalOperator || !d.clientCode || !d.codeOrg || !isDocValid) {
-            basisValid = false;
-        }
-
-        if(!d.rawEmail || !d.rawMyPhone || !isMyPhoneFilledCorrectly || !d.rawDesc) { 
-            part2Valid = false; 
-        }
-
-        document.getElementById('btn-copy-basis').disabled = !basisValid;
-        document.getElementById('btn-copy-part2').disabled = !part2Valid;
-        document.getElementById('btn-full-btn').disabled = !(basisValid && part2Valid);
-
-        document.getElementById('preview-output').innerText = d.part1 + '\n' + d.part2;
-    }
-
-    function copyReport(type) {
-        const d = getReportData();
-        let finalStr = '';
-
-        if(type === 'basis') finalStr = d.part1;
-        else if(type === 'part2') finalStr = d.part2;
-        else finalStr = d.part1 + '\n' + d.part2;
-
-        navigator.clipboard.writeText(finalStr).then(() => {
-            alert('Успешно скопировано!');
-        });
-    }
-
-    function changeTheme(themeName) {
-        document.body.className = 'theme-' + themeName;
-        localStorage.setItem('saved_theme', themeName);
-        
-        document.getElementById('money-bg').style.display = (themeName === 'money') ? 'block' : 'none';
-        document.getElementById('canvas-sakura').style.display = (themeName === 'sakura') ? 'block' : 'none';
-
-        if (activeAnimation) cancelAnimationFrame(activeAnimation);
-        if (themeName === 'sakura') startSakura();
-    }
-
-    function startSakura() {
-        const canvas = document.getElementById('canvas-sakura');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        const petals = [];
-        
-        for (let i = 0; i < 35; i++) {
-            petals.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height - canvas.height,
-                w: Math.random() * 6 + 6,
-                h: Math.random() * 4 + 4,
-                opacity: Math.random() * 0.4 + 0.5,
-                speedY: Math.random() * 0.8 + 0.8,
-                speedX: Math.random() * 1 - 0.3,
-                rotation: Math.random() * Math.PI,
-                rotationSpeed: Math.random() * 0.02 - 0.01
-            });
-        }
-        
-        function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (let i = 0; i < petals.length; i++) {
-                const p = petals[i];
-                ctx.save();
-                ctx.translate(p.x, p.y);
-                ctx.rotate(p.rotation);
-                ctx.fillStyle = `rgba(255, 174, 191, ${p.opacity})`;
-                ctx.beginPath();
-                ctx.ellipse(0, 0, p.w, p.h, 0, 0, 2 * Math.PI);
-                ctx.fill();
-                ctx.restore();
-                
-                p.y += p.speedY;
-                p.x += p.speedX + Math.sin(p.y / 30) * 0.3;
-                p.rotation += p.rotationSpeed;
-                
-                if (p.y > canvas.height || p.x > canvas.width || p.x < -20) {
-                    petals[i].y = -10;
-                    petals[i].x = Math.random() * canvas.width;
-                }
+            if (user === "Айвен" && pass === "332211") {
+                // Вход для Админа
+                currentUser = user;
+                document.getElementById('auth-block').classList.add('hidden');
+                document.getElementById('main-block').classList.remove('hidden');
+                document.getElementById('admin-block').classList.remove('hidden');
+                document.getElementById('welcome-title').innerText = "Привет, Шеф!";
+            } else if (user !== "" && pass === "1488") {
+                // Вход для обычного сотрудника
+                currentUser = user;
+                document.getElementById('auth-block').classList.add('hidden');
+                document.getElementById('main-block').classList.remove('hidden');
+                document.getElementById('welcome-title').innerText = `Стейдж: ${currentUser}`;
+            } else {
+                alert("Неверное имя или пароль!");
             }
-            activeAnimation = requestAnimationFrame(draw);
         }
-        draw();
-    }
-</script> 
+
+        function sendReport(event) {
+            event.preventDefault();
+            
+            // Собираем отмеченные документы
+            const checkedDocs = [];
+            document.querySelectorAll('.docs-container input:checked').forEach((checkbox) => {
+                checkedDocs.push(checkbox.value);
+            });
+
+            const reportText = document.getElementById('report-text').value;
+
+            // Формируем текст для отправки
+            let message = `Отчёт от: ${currentUser}\n`;
+            message += `Выбранные документы: ${checkedDocs.length > 0 ? checkedDocs.join(', ') : 'Нет'}\n`;
+            message += `Комментарий: ${reportText}`;
+
+            alert("Отчёт успешно сформирован!\n\n" + message);
+            
+            // Здесь можно оставить старый скрипт отправки в Телеграм, если он был настроен
+            document.getElementById('report-form').reset();
+        }
+    </script>
 </body>
 </html>
