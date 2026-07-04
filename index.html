@@ -23,6 +23,7 @@
         body {
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             background: url('money.gif') no-repeat center center fixed;
@@ -32,7 +33,6 @@
             position: relative;
         }
 
-        /* Задний темный слой для читаемости, если гифка яркая */
         body::before {
             content: '';
             position: absolute;
@@ -53,7 +53,7 @@
             border-radius: 24px;
             padding: 40px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-            transition: all 0.3s ease;
+            margin-bottom: 20px;
         }
 
         h2 {
@@ -82,7 +82,6 @@
         }
 
         .input-group input[type="text"],
-        .input-group input[type="password"],
         .input-group textarea {
             width: 100%;
             padding: 14px 16px;
@@ -101,7 +100,6 @@
             box-shadow: 0 0 12px rgba(0, 242, 254, 0.2);
         }
 
-        /* Стили для чекбоксов документов */
         .docs-container {
             background: rgba(0, 0, 0, 0.2);
             border: 1px solid var(--border-glass);
@@ -118,10 +116,6 @@
             cursor: pointer;
             color: #ddd;
             font-size: 15px;
-        }
-
-        .checkbox-item:last-child {
-            margin-bottom: 0;
         }
 
         .checkbox-item input {
@@ -153,15 +147,10 @@
             box-shadow: 0 6px 20px rgba(0, 242, 254, 0.6);
         }
 
-        button:active {
-            transform: translateY(1px);
-        }
-
-        /* Панель администратора */
         .admin-panel {
-            margin-top: 35px;
-            padding-top: 25px;
+            padding-top: 20px;
             border-top: 2px dashed rgba(255, 255, 255, 0.1);
+            margin-top: 25px;
         }
 
         .admin-title {
@@ -200,33 +189,20 @@
             box-shadow: 0 0 8px #00ff66;
             margin-right: 6px;
         }
-
-        .hidden {
-            display: none !important;
-        }
     </style>
 </head>
 <body>
 
-    <!-- ОКНО АВТОРИЗАЦИИ -->
-    <div id="auth-block" class="container">
-        <h2>Авторизация</h2>
-        <div class="input-group">
-            <label for="username">Ваш Стейдж (Имя)</label>
-            <input type="text" id="username" placeholder="Введите имя...">
-        </div>
-        <div class="input-group">
-            <label for="password">Пароль</label>
-            <input type="password" id="password" placeholder="••••">
-        </div>
-        <button onclick="login()">Войти</button>
-    </div>
-
-    <!-- ОСНОВНОЙ ИНТЕРФЕЙС (СКРЫТ ДО ВХОДА) -->
-    <div id="main-block" class="container hidden">
-        <h2 id="welcome-title">Рабочая область</h2>
+    <!-- ФОРМА ОТЧЁТОВ -->
+    <div class="container">
+        <h2>Рабочая область отчётов</h2>
         
         <form id="report-form" onsubmit="sendReport(event)">
+            <div class="input-group">
+                <label for="username">Ваш Стейдж (Имя)</label>
+                <input type="text" id="username" placeholder="Введите ваше имя..." required>
+            </div>
+
             <div class="input-group">
                 <label>Какие документы добавить в отчёт?</label>
                 <div class="docs-container">
@@ -246,11 +222,11 @@
             <button type="submit">Отправить отчёт</button>
         </form>
 
-        <!-- АДМИН ПАНЕЛЬ (СКРЫТА ДЛЯ ОБЫЧНЫХ) -->
-        <div id="admin-block" class="admin-panel hidden">
+        <!-- АДМИН ПАНЕЛЬ СРАЗУ ТУТ -->
+        <div class="admin-panel">
             <div class="admin-title">Панель управления (Айвен)</div>
             <div class="input-group">
-                <label style="color: #ff4b2b;">Активность на сайте (Демо-режим):</label>
+                <label style="color: #ff4b2b;">Активность на сайте:</label>
                 <ul class="status-list">
                     <li class="status-item">
                         <span><span class="status-online"></span> Сотрудник Алекс</span>
@@ -266,34 +242,10 @@
     </div>
 
     <script>
-        let currentUser = "";
-
-        function login() {
-            const user = document.getElementById('username').value.trim();
-            const pass = document.getElementById('password').value.trim();
-
-            if (user === "Айвен" && pass === "332211") {
-                // Вход для Админа
-                currentUser = user;
-                document.getElementById('auth-block').classList.add('hidden');
-                document.getElementById('main-block').classList.remove('hidden');
-                document.getElementById('admin-block').classList.remove('hidden');
-                document.getElementById('welcome-title').innerText = "Привет, Шеф!";
-            } else if (user !== "" && pass === "1488") {
-                // Вход для обычного сотрудника
-                currentUser = user;
-                document.getElementById('auth-block').classList.add('hidden');
-                document.getElementById('main-block').classList.remove('hidden');
-                document.getElementById('welcome-title').innerText = `Стейдж: ${currentUser}`;
-            } else {
-                alert("Неверное имя или пароль!");
-            }
-        }
-
         function sendReport(event) {
             event.preventDefault();
             
-            // Собираем отмеченные документы
+            const user = document.getElementById('username').value.trim();
             const checkedDocs = [];
             document.querySelectorAll('.docs-container input:checked').forEach((checkbox) => {
                 checkedDocs.push(checkbox.value);
@@ -301,14 +253,11 @@
 
             const reportText = document.getElementById('report-text').value;
 
-            // Формируем текст для отправки
-            let message = `Отчёт от: ${currentUser}\n`;
+            let message = `Отчёт от: ${user}\n`;
             message += `Выбранные документы: ${checkedDocs.length > 0 ? checkedDocs.join(', ') : 'Нет'}\n`;
             message += `Комментарий: ${reportText}`;
 
-            alert("Отчёт успешно сформирован!\n\n" + message);
-            
-            // Здесь можно оставить старый скрипт отправки в Телеграм, если он был настроен
+            alert("Отчёт отправлен!\n\n" + message);
             document.getElementById('report-form').reset();
         }
     </script>
