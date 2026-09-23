@@ -52,8 +52,6 @@
         .row-inline { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
         
         label { font-size: 11px; color: var(--text-color); opacity: 0.85; font-weight: 600; }
-        .warning-text { font-size: 10px; color: #ff5252; font-weight: bold; margin-bottom: -2px; text-transform: uppercase; }
-        body.theme-sakura .warning-text { color: #d32f2f; }
         
         input[type="text"], select, textarea {
             background: var(--input-bg); border: 1px solid var(--border-color); color: var(--input-text);
@@ -118,13 +116,11 @@
         .nick-prefix { font-size: 13px; font-weight: bold; color: var(--accent-color); padding-right: 8px; user-select: none; }
         .nick-input-container input { flex: 1; border: none !important; background: transparent !important; padding-left: 0 !important; }
 
-        /* Стили для новых строк выбора документов */
         .doc-row { display: flex; align-items: center; gap: 8px; margin-top: 3px; }
         .doc-row input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; accent-color: var(--accent-color); margin: 0; }
         .doc-row span { font-size: 12px; width: 65px; font-weight: bold; }
         .doc-row input[type="text"] { flex: 1; }
 
-        /* Анимация большой зеленой галочки */
         #success-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             display: flex; align-items: center; justify-content: center;
@@ -146,7 +142,6 @@
 </head>
 <body class="theme-money">
 
-    <!-- Оверлей для огромной галочки -->
     <div id="success-overlay">
         <div class="success-checkmark">✔</div>
     </div>
@@ -157,7 +152,6 @@
     </div>
 
     <div class="main-panel">
-        <!-- СЕЛЕКТОР ТЕМ -->
         <div class="theme-selector">
             <button class="theme-btn" onclick="changeTheme('money')">💰 Деньги</button>
             <button class="theme-btn" onclick="changeTheme('sakura')">🌸 Сакура</button>
@@ -167,7 +161,6 @@
 
         <div class="title-spacing"></div>
         
-        <!-- НИК -->
         <div class="row">
             <label>Твой ник:</label>
             <div class="nick-input-container">
@@ -179,19 +172,6 @@
         <div class="divider"></div>
         <h3>Часть 1: Основа</h3>
 
-        <!-- БАЗА С ВОРНИНГОМ -->
-        <div class="row">
-            <div class="warning-text">⚠️ Внимательно смотри, какую базу звонил!</div>
-            <label>База:</label>
-            <select id="base_select" onchange="toggleBaseInput(); validateForm();">
-                <option value="База ЦРМ">База ЦРМ</option>
-                <option value="База ИП ЦРМ">База ИП ЦРМ</option>
-                <option value="custom">Ручной ввод...</option>
-            </select>
-            <input type="text" id="base_custom" placeholder="База ИП Андрей" style="display:none; margin-top:4px;" oninput="validateForm();">
-        </div>
-
-        <!-- ДМФ КАССЕТКА -->
         <div class="row">
             <label>Кассетка:</label>
             <div class="row-inline">
@@ -200,13 +180,11 @@
             </div>
         </div>
 
-        <!-- ФИО И ДАТА -->
         <div class="row">
             <label>ФИО и Дата рождения:</label>
             <input type="text" id="fio_date" placeholder="Петров Алексей Владимирович 12.08.1996" oninput="processFIO(); validateForm();">
         </div>
 
-        <!-- НОМЕР ТЕЛЕФОНА И ОПЕРАТОР -->
         <div class="row">
             <label>Номер телефона и Оператор:</label>
             <div class="row-inline">
@@ -223,7 +201,6 @@
             <input type="text" id="operator_custom" placeholder="Введи оператора вручную" style="display:none; margin-top:4px;" oninput="validateForm();">
         </div>
 
-        <!-- КОД И ОРГ -->
         <div class="row">
             <label>Код и Организация (Если не Лента/2Берега — пиши вручную):</label>
             <div class="row-inline">
@@ -234,7 +211,6 @@
             </div>
         </div>
 
-        <!-- ДОКУМЕНТЫ В РЯД СВЕРХУ ВНИЗ С ГАЛОЧКАМИ -->
         <div class="row">
             <label>Документы (отметь нужные галочкой):</label>
             
@@ -257,7 +233,6 @@
             </div>
         </div>
 
-        <!-- НА РУССКОМ -->
         <div class="row">
             <label>На русском:</label>
             <div class="toggle-group">
@@ -266,13 +241,11 @@
             </div>
         </div>
 
-        <!-- КНОПКА СКОПИРОВАТЬ ОСНОВУ СРАЗУ ПОД НЕЙ -->
         <button class="btn-small-copy basis" id="btn-copy-basis" disabled onclick="copyReport('basis')">📋 СКОПИРОВАТЬ ОСНОВУ</button>
 
         <div class="divider"></div>
         <h3>Часть 2: Доп. Инфо</h3>
 
-        <!-- ПОЛЯ С ПОДСКАЗКАМИ -->
         <div class="row">
             <label>Почта:</label>
             <input type="text" id="email" placeholder="example@mail.ru" oninput="validateForm();">
@@ -286,10 +259,8 @@
             <textarea id="description" placeholder="без возражений, фио совпадает" oninput="validateForm();"></textarea>
         </div>
 
-        <!-- КНОПКА СКОПИРОВАТЬ ВТОРУЮ ЧАСТЬ СРАЗУ ПОД НЕЙ -->
         <button class="btn-small-copy part2" id="btn-copy-part2" disabled onclick="copyReport('part2')">🔸 СКОПИРОВАТЬ ВТОРУЮ ЧАСТЬ</button>
 
-        <!-- ОБЩИЕ ФИНАЛЬНЫЕ КНОПКИ -->
         <div class="divider"></div>
         <button class="action-btn btn-full" id="btn-full-btn" disabled onclick="copyReport('full')">🚀 СКОПИРОВАТЬ ПОЛНЫЙ ОТЧЕТ</button>
         <button class="action-btn btn-preview" onclick="togglePreview()">👁 ПОКАЗАТЬ / СКРЫТЬ ПРЕВЬЮ</button>
@@ -355,11 +326,6 @@
         validateForm();
     }
 
-    function toggleBaseInput() {
-        const select = document.getElementById('base_select');
-        document.getElementById('base_custom').style.display = select.value === 'custom' ? 'block' : 'none';
-    }
-
     function toggleOperatorInput() {
         const select = document.getElementById('operator_select');
         document.getElementById('operator_custom').style.display = select.value === 'custom' ? 'block' : 'none';
@@ -373,9 +339,6 @@
     }
 
     function clearForm() {
-        document.getElementById('base_select').value = 'База ЦРМ';
-        document.getElementById('base_custom').value = '';
-        document.getElementById('base_custom').style.display = 'none';
         setDmf('');
         document.getElementById('fio_date').value = '';
         document.getElementById('fio_date').classList.remove('error-border');
@@ -408,10 +371,6 @@
         const namePart = document.getElementById('username_custom').value.trim();
         const finalNick = namePart ? "Холодник " + namePart : "";
 
-        const baseSelect = document.getElementById('base_select').value;
-        const baseCustom = document.getElementById('base_custom').value.trim();
-        const finalBase = baseSelect === 'custom' ? baseCustom : baseSelect;
-
         const phoneNum = document.getElementById('client_phone').value.trim();
         const opSelect = document.getElementById('operator_select').value;
         const opCustom = document.getElementById('operator_custom').value.trim();
@@ -422,7 +381,6 @@
         const clientCode = document.getElementById('client_code').value.trim();
         const codeOrg = document.getElementById('code_org').value.trim();
         
-        // Сборка документов по включенным галочкам
         let docLines = [];
         if(document.getElementById('use_snils').checked) {
             let val = document.getElementById('doc_snils').value.trim().replace(/\D/g, '');
@@ -438,7 +396,7 @@
         }
         let finalDocsStr = docLines.length > 0 ? docLines.join('\n') : 'Документ ...';
 
-        let part1 = `${finalBase || '...'}\n${finalNick || '...'}\nДМФ сип кассетка ${dmfSelection || '...'}\nФИО: ${fioDate || '...'}\nНомер телефона: ${finalPhoneLine || '...'}\nКод который он дал ${clientCode || '...'} ${codeOrg || '...'}\n${finalDocsStr}\nНа русском : ${isRussianGood ? 'хорошо' : 'плохо'}`;
+        let part1 = `${finalNick || '...'}\nДМФ сип кассетка ${dmfSelection || '...'}\nФИО: ${fioDate || '...'}\nНомер телефона: ${finalPhoneLine || '...'}\nКод который он дал ${clientCode || '...'} ${codeOrg || '...'}\n${finalDocsStr}\nНа русском : ${isRussianGood ? 'хорошо' : 'плохо'}`;
 
         let rawEmail = document.getElementById('email').value.trim();
         let rawMyPhone = document.getElementById('my_phone').value.trim();
@@ -446,7 +404,7 @@
 
         let part2 = `Почта: ${rawEmail || '...'}\nМой номер: ${rawMyPhone || '...'}\nОписание: ${rawDesc || '...'}`;
 
-        return { part1, part2, namePart, finalBase, phoneNum, finalOperator, fioDate, clientCode, codeOrg, rawEmail, rawMyPhone, rawDesc };
+        return { part1, part2, namePart, phoneNum, finalOperator, fioDate, clientCode, codeOrg, rawEmail, rawMyPhone, rawDesc };
     }
 
     function validateForm() {
@@ -462,7 +420,6 @@
         const isPhoneValid = d.phoneNum.startsWith('+') && d.phoneNum.length >= 11;
         if(d.phoneNum) document.getElementById('client_phone').classList.toggle('error-border', !isPhoneValid);
 
-        // Валидация документов по галочкам
         let docsValid = true;
         let anyDocChecked = false;
 
@@ -499,7 +456,7 @@
         const phoneWithDetailsRegex = /^\+?\d{10,12}\s+\S+/;
         const isMyPhoneFilledCorrectly = phoneWithDetailsRegex.test(d.rawMyPhone);
 
-        if(!d.namePart || !d.finalBase || !dmfSelection || !isFioValid || !isPhoneValid || !d.finalOperator || !d.clientCode || !d.codeOrg || !anyDocChecked || !docsValid) {
+        if(!d.namePart || !dmfSelection || !isFioValid || !isPhoneValid || !d.finalOperator || !d.clientCode || !d.codeOrg || !anyDocChecked || !docsValid) {
             basisValid = false;
         }
 
@@ -523,13 +480,12 @@
         else finalStr = d.part1 + '\n' + d.part2;
 
         navigator.clipboard.writeText(finalStr).then(() => {
-            // Показ большой растворяющейся зеленой галочки
             const overlay = document.getElementById('success-overlay');
             overlay.className = 'show';
             
             setTimeout(() => {
                 overlay.className = '';
-            }, 500); // Быстро растворяется за полсекунды
+            }, 500);
         });
     }
 
