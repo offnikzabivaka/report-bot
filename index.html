@@ -26,11 +26,18 @@
         .bg-gif { width: 100%; height: 100%; background: url('money.gif') center/cover no-repeat; opacity: 0.35; display: none; }
         canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; }
 
+        /* НОВЫЙ ОСНОВНОЙ СТИЛЬ ИЗ CRM */
         body.theme-crm {
-            --bg-color: #10161d; --panel-bg: #1c2430; --text-color: #ffffff;
-            --accent-color: #3ad385; --border-color: #2a3340; --input-bg: #0b1016;
-            --input-text: #ffffff; --label-color: #7b8a9c;
+            --bg-color: #10161d;
+            --panel-bg: #1c2430;
+            --text-color: #ffffff;
+            --accent-color: #3ad385; /* Мятно-зеленый */
+            --border-color: #2a3340;
+            --input-bg: #0b1016;
+            --input-text: #ffffff;
+            --label-color: #7b8a9c;
         }
+        
         body.theme-money {
             --bg-color: #050505; --panel-bg: rgba(15, 15, 15, 0.98); --text-color: #ffffff; --accent-color: #00ffcc; --border-color: #00ffcc; --input-bg: #101010; --input-text: #ffffff;
         }
@@ -51,32 +58,58 @@
             box-sizing: border-box; z-index: 2; transition: background 0.3s, border 0.3s;
         }
 
-        h3 { margin: 5px 0 2px 0; color: #ffb300; font-size: 13px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
+        .title-spacing { height: 5px; }
+        
+        h3 { 
+            margin: 5px 0 2px 0; color: #ffb300; font-size: 13px; text-transform: uppercase; 
+            font-weight: 700; letter-spacing: 0.5px;
+        }
+        
         body.theme-crm h3 { color: #ffffff; font-size: 13px; letter-spacing: 0.5px; margin-top: 5px; }
-        body.theme-crm label { font-size: 10px; color: var(--label-color); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: -2px; }
+        body.theme-crm label { 
+            font-size: 10px; color: var(--label-color); text-transform: uppercase; 
+            letter-spacing: 1px; font-weight: 700; margin-bottom: -2px;
+        }
+        
         body.theme-sakura h3 { color: #c2185b; }
         
         .row { display: flex; flex-direction: column; gap: 6px; }
         .row-inline { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+        
         label { font-size: 12px; color: var(--label-color, var(--text-color)); opacity: 0.9; font-weight: 600; }
         
         input[type="text"], select, textarea {
             background: var(--input-bg); border: 1px solid var(--border-color); color: var(--input-text);
-            padding: 10px 12px; border-radius: 8px; font-size: 14px; transition: all 0.2s; box-sizing: border-box; width: 100%;
+            padding: 10px 12px; border-radius: 8px; font-size: 14px; transition: all 0.2s; box-sizing: border-box;
+            width: 100%;
         }
-        input[type="text"]:focus, select:focus, textarea:focus { border-color: var(--accent-color); outline: none; box-shadow: 0 0 0 1px var(--accent-color); }
+        input[type="text"]:focus, select:focus, textarea:focus { 
+            border-color: var(--accent-color); outline: none; 
+            box-shadow: 0 0 0 1px var(--accent-color); 
+        }
+        
         textarea { resize: vertical; min-height: 55px; font-family: inherit; }
 
         .theme-selector { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 5px; background: rgba(0,0,0,0.15); padding: 5px; border-radius: 8px; }
-        .theme-btn { flex: 1; min-width: 65px; padding: 6px; font-size: 10px; font-weight: bold; border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; background: var(--input-bg); color: var(--input-text); text-align: center; transition: 0.2s; }
+        .theme-btn { 
+            flex: 1; min-width: 65px; padding: 6px; font-size: 10px; font-weight: bold; 
+            border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; 
+            background: var(--input-bg); color: var(--input-text); text-align: center; transition: 0.2s;
+        }
         .theme-btn:hover { background: var(--accent-color); color: #000; border-color: var(--accent-color); }
 
-        .dmf-btn { flex: 1; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--input-text); padding: 8px; font-weight: bold; border-radius: 8px; cursor: pointer; font-size: 14px; transition: 0.2s; }
+        .dmf-btn {
+            flex: 1; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--input-text);
+            padding: 8px; font-weight: bold; border-radius: 8px; cursor: pointer; font-size: 14px; transition: 0.2s;
+        }
         .dmf-btn.active.plus { background: #1b5e20; border-color: #4caf50; color: #fff; }
         .dmf-btn.active.minus { background: #b71c1c; border-color: #f44336; color: #fff; }
         body.theme-crm .dmf-btn.active.plus { background: rgba(58, 211, 133, 0.15); border-color: var(--accent-color); color: var(--accent-color); }
 
-        .fast-btn { background: var(--input-bg); border: 1px solid var(--border-color); color: var(--input-text); padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 12px; transition: 0.2s; }
+        .fast-btn {
+            background: var(--input-bg); border: 1px solid var(--border-color); color: var(--input-text);
+            padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 12px; transition: 0.2s;
+        }
         .fast-btn:hover { border-color: var(--accent-color); color: var(--accent-color); }
         
         .toggle-group { display: flex; gap: 6px; background: var(--input-bg); padding: 4px; border-radius: 8px; border: 1px solid var(--border-color); width: 100%; box-sizing: border-box; }
@@ -85,7 +118,7 @@
         .toggle-btn.active.bad { background: #c62828; color: #fff; }
         body.theme-crm .toggle-btn.active.good { background: rgba(58, 211, 133, 0.15); color: var(--accent-color); }
 
-        /* Анимация и класс ошибки */
+        /* Система активной валидации: Тряска и Красная рамка */
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
             25% { transform: translateX(-5px); }
@@ -94,44 +127,8 @@
         }
         .shake { animation: shake 0.4s ease-in-out; }
         .error-border { border-color: #ff5252 !important; background: rgba(255, 82, 82, 0.05) !important; }
-        
-        .preview-box { display: none; background: #000; border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; font-family: monospace; font-size: 12px; color: #00ff00; white-space: pre-wrap; word-break: break-all; max-height: 140px; overflow-y: auto; margin-top: 2px; }
-        body.theme-sakura .preview-box { background: #fff0f2; color: #4a282c; }
-        body.theme-light .preview-box { background: #fafafa; color: #333; }
-        body.theme-money .preview-box { color: #fff; border-color: var(--accent-color); }
-        body.theme-dark .preview-box { color: #e0e0e0; }
-        body.theme-crm .preview-box { background: var(--input-bg); color: var(--text-color); border-color: var(--border-color); }
 
-        .action-btn { width: 100%; border: none; padding: 12px; border-radius: 8px; font-size: 13px; font-weight: bold; cursor: pointer; transition: 0.2s; color: white; }
-        .btn-basis { background: #1b5e20; } .btn-basis:hover { background: #2e7d32; }
-        .btn-part2 { background: #e65100; } .btn-part2:hover { background: #f57c00; }
-        .btn-full { background: #0d47a1; } .btn-full:hover { background: #1565c0; }
-        body.theme-crm .btn-full { background: var(--accent-color); color: #000; font-size: 14px; box-shadow: 0 4px 15px rgba(58, 211, 133, 0.15); }
-        body.theme-crm .btn-full:hover { background: #32ba75; }
-        
-        .btn-preview { background: transparent; border: 1px solid var(--border-color); color: var(--accent-color); }
-        .btn-preview:hover { background: rgba(255,255,255,0.05); }
-        .btn-clear { background: #37474f; margin-top: 2px; } .btn-clear:hover { background: #455a64; }
-        body.theme-crm .btn-clear { background: transparent; border: 1px solid var(--border-color); color: #ff5252; }
-        
-        .btn-small-copy { width: 100%; padding: 8px; font-size: 12px; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; color: white; transition: 0.15s; margin-top: 4px; }
-        .btn-small-copy.basis { background: #2e7d32; } .btn-small-copy.basis:hover { background: #388e3c; }
-        .btn-small-copy.part2 { background: #ef6c00; } .btn-small-copy.part2:hover { background: #f57c00; }
-        body.theme-crm .btn-small-copy.basis { background: #1e3a2a; color: #3ad385; border: 1px solid #2a4a35; }
-        body.theme-crm .btn-small-copy.part2 { background: #3a2510; color: #ff9800; border: 1px solid #4a3015; }
-
-        .divider { border-top: 1px dashed var(--border-color); margin: 6px 0; opacity: 0.5; }
-        .nick-input-container { display: flex; align-items: center; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; padding-left: 12px; transition: 0.2s; }
-        .nick-input-container:focus-within { border-color: var(--accent-color); box-shadow: 0 0 0 1px var(--accent-color); }
-        .nick-prefix { font-size: 14px; font-weight: bold; color: var(--accent-color); padding-right: 8px; user-select: none; }
-        .nick-input-container input { flex: 1; border: none !important; background: transparent !important; padding-left: 0 !important; box-shadow: none !important; }
-
-        .doc-row { display: flex; align-items: center; gap: 10px; margin-top: 4px; }
-        .doc-row input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: var(--accent-color); margin: 0; }
-        .doc-row span { font-size: 13px; width: 70px; font-weight: bold; color: var(--text-color); }
-        .doc-row input[type="text"] { flex: 1; }
-
-        /* Система уведомлений Toast */
+        /* Всплывающие уведомления (Toast) */
         #toast-container {
             position: fixed; bottom: 20px; right: 20px; z-index: 10000;
             display: flex; flex-direction: column; gap: 10px; pointer-events: none;
@@ -142,15 +139,62 @@
             opacity: 0; transform: translateX(50px); transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
         .toast.show { opacity: 1; transform: translateX(0); }
-        .toast.success { background: var(--accent-color); color: #000; box-shadow: 0 4px 15px rgba(58, 211, 133, 0.2); }
 
-        .footer-credits { text-align: center; font-size: 11px; margin-top: 10px; opacity: 0.5; color: var(--text-color); }
+        .action-btn { width: 100%; border: none; padding: 12px; border-radius: 8px; font-size: 13px; font-weight: bold; cursor: pointer; transition: 0.2s; color: white; margin-top: 5px;}
+        .btn-full { background: #0d47a1; } .btn-full:hover { background: #1565c0; }
+        body.theme-crm .btn-full { 
+            background: var(--accent-color); color: #000; font-size: 14px; 
+            box-shadow: 0 4px 15px rgba(58, 211, 133, 0.15); 
+        }
+        body.theme-crm .btn-full:hover { background: #32ba75; }
+        
+        .btn-clear { background: #37474f; margin-top: 2px; } .btn-clear:hover { background: #455a64; }
+        body.theme-crm .btn-clear { background: transparent; border: 1px solid var(--border-color); color: #ff5252; }
+        
+        .divider { border-top: 1px dashed var(--border-color); margin: 6px 0; opacity: 0.5; }
+        
+        .nick-input-container { display: flex; align-items: center; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; padding-left: 12px; transition: 0.2s; }
+        .nick-input-container:focus-within { border-color: var(--accent-color); box-shadow: 0 0 0 1px var(--accent-color); }
+        .nick-prefix { font-size: 14px; font-weight: bold; color: var(--accent-color); padding-right: 8px; user-select: none; }
+        .nick-input-container input { flex: 1; border: none !important; background: transparent !important; padding-left: 0 !important; box-shadow: none !important; }
+
+        /* Стили для умных документов */
+        .doc-row { display: flex; align-items: center; gap: 10px; margin-top: 4px; }
+        .doc-row span.doc-label { font-size: 13px; width: 65px; font-weight: bold; color: var(--text-color); }
+        .doc-input-wrapper { position: relative; flex: 1; display: flex; align-items: center; }
+        .doc-input-wrapper input { padding-right: 30px; }
+        .doc-status {
+            position: absolute; right: 10px; font-size: 16px; color: var(--accent-color);
+            font-weight: bold; opacity: 0; transition: 0.2s; pointer-events: none;
+        }
+        .doc-status.valid { opacity: 1; transform: scale(1.1); }
+
+        #success-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 9999; pointer-events: none; opacity: 0;
+            transition: opacity 0.4s ease-out;
+        }
+        #success-overlay.show { opacity: 1; }
+        .success-checkmark {
+            font-size: 120px; color: var(--accent-color); text-shadow: 0 0 30px rgba(58,211,133,0.4);
+            transform: scale(0.5); transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        #success-overlay.show .success-checkmark { transform: scale(1); }
+
+        .footer-credits {
+            text-align: center; font-size: 11px; margin-top: 10px; opacity: 0.5; color: var(--text-color);
+        }
         .footer-credits a { color: var(--accent-color); text-decoration: none; font-weight: bold; }
     </style>
 </head>
 <body class="theme-crm">
 
     <div id="toast-container"></div>
+
+    <div id="success-overlay">
+        <div class="success-checkmark">✔</div>
+    </div>
 
     <div id="bg-container">
         <div class="bg-gif" id="money-bg"></div>
@@ -177,13 +221,12 @@
         </div>
 
         <div class="divider"></div>
-        <h3>Часть 1: Основа</h3>
 
         <div class="row">
             <label>Кассетка:</label>
             <div class="row-inline">
-                <button class="dmf-btn" id="dmf-plus" onclick="setDmf('+')">[ + ]</button>
-                <button class="dmf-btn" id="dmf-minus" onclick="setDmf('-')">[ - ]</button>
+                <button class="dmf-btn" id="dmf-plus" onclick="setDmf('+'); removeError(this);">[ + ]</button>
+                <button class="dmf-btn" id="dmf-minus" onclick="setDmf('-'); removeError(this);">[ - ]</button>
             </div>
         </div>
 
@@ -219,24 +262,30 @@
         </div>
 
         <div class="row">
-            <label>Документы (отметь нужные галочкой):</label>
+            <label>Документы (введите номер, зеленая галочка подтвердит формат):</label>
             
             <div class="doc-row">
-                <input type="checkbox" id="use_snils" onchange="removeError(document.getElementById('doc_snils'));">
-                <span>СНИЛС:</span>
-                <input type="text" id="doc_snils" placeholder="11 цифр" oninput="removeError(this);">
+                <span class="doc-label">СНИЛС:</span>
+                <div class="doc-input-wrapper">
+                    <input type="text" id="doc_snils" placeholder="11 цифр" oninput="checkDocs(); removeError(this);">
+                    <span id="status_snils" class="doc-status">✔</span>
+                </div>
             </div>
 
             <div class="doc-row">
-                <input type="checkbox" id="use_passport" onchange="removeError(document.getElementById('doc_passport'));">
-                <span>Паспорт:</span>
-                <input type="text" id="doc_passport" placeholder="10 цифр" oninput="removeError(this);">
+                <span class="doc-label">Паспорт:</span>
+                <div class="doc-input-wrapper">
+                    <input type="text" id="doc_passport" placeholder="10 цифр" oninput="checkDocs(); removeError(this);">
+                    <span id="status_passport" class="doc-status">✔</span>
+                </div>
             </div>
 
             <div class="doc-row">
-                <input type="checkbox" id="use_inn" onchange="removeError(document.getElementById('doc_inn'));">
-                <span>ИНН:</span>
-                <input type="text" id="doc_inn" placeholder="12 цифр" oninput="removeError(this);">
+                <span class="doc-label">ИНН:</span>
+                <div class="doc-input-wrapper">
+                    <input type="text" id="doc_inn" placeholder="12 цифр" oninput="checkDocs(); removeError(this);">
+                    <span id="status_inn" class="doc-status">✔</span>
+                </div>
             </div>
         </div>
 
@@ -248,10 +297,7 @@
             </div>
         </div>
 
-        <button class="btn-small-copy basis" onclick="copyReport('basis')">📋 СКОПИРОВАТЬ ОСНОВУ</button>
-
         <div class="divider"></div>
-        <h3>Часть 2: Доп. Инфо</h3>
 
         <div class="row">
             <label>Почта:</label>
@@ -266,16 +312,11 @@
             <textarea id="description" placeholder="Краткий контекст по клиенту" oninput="removeError(this);"></textarea>
         </div>
 
-        <button class="btn-small-copy part2" onclick="copyReport('part2')">🔸 СКОПИРОВАТЬ ВТОРУЮ ЧАСТЬ</button>
-
-        <div class="divider"></div>
-        <button class="action-btn btn-full" onclick="copyReport('full')">🚀 ДОБАВИТЬ ЛИД (СКОПИРОВАТЬ)</button>
-        <button class="action-btn btn-preview" onclick="togglePreview()">👁 ПОКАЗАТЬ / СКРЫТЬ ПРЕВЬЮ</button>
-        <div class="preview-box" id="preview-output"></div>
+        <button class="action-btn btn-full" onclick="copyReport()">🚀 СКОПИРОВАТЬ ВЕСЬ ОТЧЁТ</button>
         <button class="action-btn btn-clear" onclick="clearForm()">🧹 ОЧИСТИТЬ ФОРМУ</button>
 
         <div class="footer-credits">
-            Нашли баг или есть идея? ТГ: <a href="https://t.me/x007am98" target="_blank">@x007am98</a>
+            Нашли баг или есть идея? ТГ: <a href="https://t.me/aivenos" target="_blank">@x007am98</a>
         </div>
     </div>
 
@@ -285,16 +326,18 @@
     let activeAnimation = null;
 
     window.onload = function() {
-        if(localStorage.getItem('saved_only_name')) document.getElementById('username_custom').value = localStorage.getItem('saved_only_name');
+        if(localStorage.getItem('saved_only_name')) {
+            document.getElementById('username_custom').value = localStorage.getItem('saved_only_name');
+        }
         changeTheme(localStorage.getItem('saved_theme') || 'crm');
-        updatePreviewLive();
+        checkDocs();
     }
 
-    // Система тостов (уведомлений)
-    function showToast(msg, isSuccess = false) {
+    // Уведомления (Toast)
+    function showToast(msg) {
         const container = document.getElementById('toast-container');
         const toast = document.createElement('div');
-        toast.className = `toast ${isSuccess ? 'success' : ''}`;
+        toast.className = `toast`;
         toast.innerText = msg;
         container.appendChild(toast);
         setTimeout(() => toast.classList.add('show'), 10);
@@ -304,13 +347,19 @@
         }, 3000);
     }
 
+    // Убирает красную рамку, когда начинаешь вводить данные
     function removeError(el) {
-        el.classList.remove('error-border');
-        if(el.id === 'username_custom') document.getElementById('wrap_username').classList.remove('error-border');
-        updatePreviewLive();
+        if(el) el.classList.remove('error-border');
+        if(el && el.id === 'username_custom') document.getElementById('wrap_username').classList.remove('error-border');
+        if(el && (el.id === 'dmf-plus' || el.id === 'dmf-minus')) {
+            document.getElementById('dmf-plus').classList.remove('error-border');
+            document.getElementById('dmf-minus').classList.remove('error-border');
+        }
     }
 
-    function saveNick() { localStorage.setItem('saved_only_name', document.getElementById('username_custom').value); }
+    function saveNick() { 
+        localStorage.setItem('saved_only_name', document.getElementById('username_custom').value); 
+    }
 
     function processFIO() {
         const input = document.getElementById('fio_date');
@@ -319,7 +368,7 @@
         let matchedDate = val.match(dateRegex);
         let dateStr = matchedDate ? matchedDate[1] : "";
         let textStr = matchedDate ? val.replace(dateRegex, '') : val;
-        let normalizedText = textStr.toLowerCase().replace(/(^|\s)\S/g, l => l.toUpperCase());
+        let normalizedText = textStr.toLowerCase().replace(/(^|\s)\S/g, function(l) { return l.toUpperCase(); });
         let finalVal = normalizedText.trim() + (dateStr ? " " + dateStr : "");
         
         if(val.toUpperCase() === finalVal.toUpperCase() && val !== finalVal) {
@@ -333,14 +382,12 @@
         dmfSelection = val;
         document.getElementById('dmf-plus').className = val === '+' ? 'dmf-btn active plus' : 'dmf-btn';
         document.getElementById('dmf-minus').className = val === '-' ? 'dmf-btn active minus' : 'dmf-btn';
-        updatePreviewLive();
     }
 
     function setLang(isGood) {
         isRussianGood = isGood;
         document.getElementById('lang-good').className = isGood ? 'toggle-btn active good' : 'toggle-btn';
         document.getElementById('lang-bad').className = !isGood ? 'toggle-btn active bad' : 'toggle-btn';
-        updatePreviewLive();
     }
 
     function toggleOperatorInput() {
@@ -348,130 +395,139 @@
         const custom = document.getElementById('operator_custom');
         custom.style.display = select.value === 'custom' ? 'block' : 'none';
         removeError(custom);
-        updatePreviewLive();
     }
 
-    function setOrg(name) { document.getElementById('code_org').value = name; removeError(document.getElementById('code_org')); }
+    function setOrg(name) { 
+        const orgInput = document.getElementById('code_org');
+        orgInput.value = name; 
+        removeError(orgInput);
+    }
 
-    function togglePreview() {
-        const box = document.getElementById('preview-output');
-        box.style.display = box.style.display === 'block' ? 'none' : 'block';
+    // Проверка документов "на лету" - включает зеленую галочку, если длина правильная
+    function checkDocs() {
+        let snils = document.getElementById('doc_snils').value.replace(/\D/g, '');
+        document.getElementById('status_snils').classList.toggle('valid', snils.length === 11);
+
+        let pass = document.getElementById('doc_passport').value.replace(/\D/g, '');
+        document.getElementById('status_passport').classList.toggle('valid', pass.length === 10);
+
+        let inn = document.getElementById('doc_inn').value.replace(/\D/g, '');
+        document.getElementById('status_inn').classList.toggle('valid', inn.length === 12);
     }
 
     function clearForm() {
         setDmf('');
-        document.querySelectorAll('input[type="text"], textarea').forEach(el => { el.value = ''; el.classList.remove('error-border'); });
-        document.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = false);
+        document.querySelectorAll('input[type="text"], textarea').forEach(el => {
+            el.value = '';
+            removeError(el);
+        });
         document.getElementById('operator_select').value = 'МТС';
         document.getElementById('operator_custom').style.display = 'none';
-        document.getElementById('wrap_username').classList.remove('error-border');
         setLang(true);
         if(localStorage.getItem('saved_only_name')) document.getElementById('username_custom').value = localStorage.getItem('saved_only_name');
-        updatePreviewLive();
+        checkDocs();
     }
 
-    function getReportData() {
-        const namePart = document.getElementById('username_custom').value.trim();
-        const phoneNum = document.getElementById('client_phone').value.trim();
-        const opSelect = document.getElementById('operator_select').value;
-        const opCustom = document.getElementById('operator_custom').value.trim();
-        const finalOperator = opSelect === 'custom' ? opCustom : opSelect;
-        
-        let docLines = [];
-        if(document.getElementById('use_snils').checked) docLines.push(`СНИЛС ${document.getElementById('doc_snils').value.trim().replace(/\D/g, '') || '...'}`);
-        if(document.getElementById('use_passport').checked) docLines.push(`Паспорт ${document.getElementById('doc_passport').value.trim().replace(/\D/g, '') || '...'}`);
-        if(document.getElementById('use_inn').checked) docLines.push(`ИНН ${document.getElementById('doc_inn').value.trim().replace(/\D/g, '') || '...'}`);
-
-        const p1 = `${namePart ? "Холодник "+namePart : '...'}\nДМФ сип кассетка ${dmfSelection || '...'}\nФИО: ${document.getElementById('fio_date').value.trim() || '...'}\nНомер телефона: ${phoneNum + (finalOperator ? " "+finalOperator : '') || '...'}\nКод который он дал ${document.getElementById('client_code').value.trim() || '...'} ${document.getElementById('code_org').value.trim() || '...'}\n${docLines.length>0 ? docLines.join('\n') : 'Документ ...'}\nНа русском : ${isRussianGood ? 'хорошо' : 'плохо'}`;
-        const p2 = `Почта: ${document.getElementById('email').value.trim() || '...'}\nМой номер: ${document.getElementById('my_phone').value.trim() || '...'}\nОписание: ${document.getElementById('description').value.trim() || '...'}`;
-
-        return { p1, p2, namePart, phoneNum, finalOperator, opSelect, opCustom };
-    }
-
-    function updatePreviewLive() {
-        const d = getReportData();
-        document.getElementById('preview-output').innerText = d.p1 + '\n' + d.p2;
-    }
-
-    function markError(id, msg) {
-        const el = document.getElementById(id);
-        if(id === 'username_custom') document.getElementById('wrap_username').classList.add('error-border', 'shake');
-        else el.classList.add('error-border', 'shake');
-        
-        setTimeout(() => {
-            el.classList.remove('shake');
-            if(id === 'username_custom') document.getElementById('wrap_username').classList.remove('shake');
-        }, 400);
-        showToast("❌ " + msg);
-    }
-
-    function copyReport(type) {
+    function copyReport() {
         let errors = [];
+        const namePart = document.getElementById('username_custom').value.trim();
         const fioDate = document.getElementById('fio_date').value.trim();
         const dateRegex = /\b\d{2}\.\d{2}\.\d{4}$/;
+        const phone = document.getElementById('client_phone').value.trim();
+        const opSelect = document.getElementById('operator_select').value;
+        const opCustom = document.getElementById('operator_custom').value.trim();
+        const clientCode = document.getElementById('client_code').value.trim();
+        const codeOrg = document.getElementById('code_org').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const myPhone = document.getElementById('my_phone').value.trim();
+        const desc = document.getElementById('description').value.trim();
+
+        let snils = document.getElementById('doc_snils').value.replace(/\D/g, '');
+        let pass = document.getElementById('doc_passport').value.replace(/\D/g, '');
+        let inn = document.getElementById('doc_inn').value.replace(/\D/g, '');
+
+        // Проверки
+        if (!namePart) errors.push({id: 'username_custom', msg: 'Укажи свой ник!'});
+        if (!dmfSelection) errors.push({id: 'dmf-plus', msg: 'Выбери кассетку (+ или -)'});
+        if (!dateRegex.test(fioDate) || fioDate.replace(dateRegex, '').trim().split(/\s+/).filter(Boolean).length < 3) errors.push({id: 'fio_date', msg: 'ФИО: нужно 3 слова + дата (ДД.ММ.ГГГГ)'});
+        if (!phone.startsWith('+') || phone.length < 11) errors.push({id: 'client_phone', msg: 'Телефон: от 11 цифр и с +'});
+        if (opSelect === 'custom' && !opCustom) errors.push({id: 'operator_custom', msg: 'Укажи оператора вручную'});
+        if (!clientCode) errors.push({id: 'client_code', msg: 'Код пуст'});
+        if (!codeOrg) errors.push({id: 'code_org', msg: 'Организация пуста'});
+
+        // Логика документов
+        let hasValidDoc = false;
+        let docLines = [];
         
-        // Валидация Основы
-        if (type === 'basis' || type === 'full') {
-            if(!document.getElementById('username_custom').value.trim()) errors.push({id: 'username_custom', msg: 'Укажи свой ник!'});
-            if(!dmfSelection) errors.push({id: 'dmf-plus', msg: 'Выбери кассетку (+ или -)'});
-            if(!dateRegex.test(fioDate) || fioDate.replace(dateRegex, '').trim().split(/\s+/).filter(Boolean).length < 3) errors.push({id: 'fio_date', msg: 'ФИО: нужно 3 слова + дата (ДД.ММ.ГГГГ)'});
-            
-            const phone = document.getElementById('client_phone').value.trim();
-            if(!phone.startsWith('+') || phone.length < 11) errors.push({id: 'client_phone', msg: 'Телефон должен начинаться с + и содержать от 11 цифр'});
-            
-            const opSelect = document.getElementById('operator_select').value;
-            if(opSelect === 'custom' && !document.getElementById('operator_custom').value.trim()) errors.push({id: 'operator_custom', msg: 'Укажи оператора вручную'});
-            
-            if(!document.getElementById('client_code').value.trim()) errors.push({id: 'client_code', msg: 'Код пуст'});
-            if(!document.getElementById('code_org').value.trim()) errors.push({id: 'code_org', msg: 'Организация пуста'});
-
-            let docChecked = false;
-            if(document.getElementById('use_snils').checked) { docChecked = true; if(document.getElementById('doc_snils').value.replace(/\D/g, '').length !== 11) errors.push({id: 'doc_snils', msg: 'СНИЛС должен содержать 11 цифр'}); }
-            if(document.getElementById('use_passport').checked) { docChecked = true; if(document.getElementById('doc_passport').value.replace(/\D/g, '').length !== 10) errors.push({id: 'doc_passport', msg: 'Паспорт должен содержать 10 цифр'}); }
-            if(document.getElementById('use_inn').checked) { docChecked = true; if(document.getElementById('doc_inn').value.replace(/\D/g, '').length !== 12) errors.push({id: 'doc_inn', msg: 'ИНН должен содержать 12 цифр'}); }
-            
-            if(!docChecked) errors.push({id: 'use_snils', msg: 'Отметь хотя бы один документ!'});
+        if (snils) {
+            if (snils.length === 11) { hasValidDoc = true; docLines.push(`СНИЛС ${snils}`); }
+            else errors.push({id: 'doc_snils', msg: 'СНИЛС должен содержать 11 цифр'});
+        }
+        if (pass) {
+            if (pass.length === 10) { hasValidDoc = true; docLines.push(`Паспорт ${pass}`); }
+            else errors.push({id: 'doc_passport', msg: 'Паспорт должен содержать 10 цифр'});
+        }
+        if (inn) {
+            if (inn.length === 12) { hasValidDoc = true; docLines.push(`ИНН ${inn}`); }
+            else errors.push({id: 'doc_inn', msg: 'ИНН должен содержать 12 цифр'});
+        }
+        if (!hasValidDoc && snils.length === 0 && pass.length === 0 && inn.length === 0) {
+            errors.push({id: 'doc_snils', msg: 'Укажи хотя бы один документ правильно!'});
         }
 
-        // Валидация Доп Инфо
-        if (type === 'part2' || type === 'full') {
-            if(!document.getElementById('email').value.trim()) errors.push({id: 'email', msg: 'Почта пуста'});
-            if(!/^\+?\d{10,12}\s+\S+/.test(document.getElementById('my_phone').value.trim())) errors.push({id: 'my_phone', msg: 'Твой номер: нужен формат "+7... детали"'});
-            if(!document.getElementById('description').value.trim()) errors.push({id: 'description', msg: 'Заполни описание'});
-        }
+        if (!email) errors.push({id: 'email', msg: 'Почта пуста'});
+        if (!/^\+?\d{10,12}\s+\S+/.test(myPhone)) errors.push({id: 'my_phone', msg: 'Твой номер: нужен формат "+7... детали"'});
+        if (!desc) errors.push({id: 'description', msg: 'Заполни описание'});
 
+        // Если есть ошибки - трясем поля и показываем тост
         if (errors.length > 0) {
-            // Берем только первую ошибку, чтобы не спамить тостами
-            markError(errors[0].id, errors[0].msg);
-            // Но красным выделяем и трясем всё неверное
+            showToast("❌ " + errors[0].msg);
             errors.forEach(e => {
                 const el = document.getElementById(e.id);
-                if(el && el.id !== 'use_snils' && el.id !== 'dmf-plus') {
-                    if(el.id === 'username_custom') document.getElementById('wrap_username').classList.add('error-border', 'shake');
-                    else el.classList.add('error-border', 'shake');
-                    setTimeout(() => {
-                        el.classList.remove('shake');
-                        if(el.id === 'username_custom') document.getElementById('wrap_username').classList.remove('shake');
-                    }, 400);
+                if (el) {
+                    if (e.id === 'username_custom') {
+                        const wrap = document.getElementById('wrap_username');
+                        wrap.classList.add('error-border', 'shake');
+                        setTimeout(() => wrap.classList.remove('shake'), 400);
+                    } else if (e.id === 'dmf-plus') {
+                        const btnP = document.getElementById('dmf-plus');
+                        const btnM = document.getElementById('dmf-minus');
+                        btnP.classList.add('error-border', 'shake');
+                        btnM.classList.add('error-border', 'shake');
+                        setTimeout(() => { btnP.classList.remove('shake'); btnM.classList.remove('shake'); }, 400);
+                    } else {
+                        el.classList.add('error-border', 'shake');
+                        setTimeout(() => el.classList.remove('shake'), 400);
+                    }
                 }
             });
             return;
         }
 
-        // Если все ок - копируем
-        const d = getReportData();
-        const finalStr = type === 'basis' ? d.p1 : (type === 'part2' ? d.p2 : d.p1 + '\n' + d.p2);
+        // Если всё окей - собираем единый отчет
+        const finalNick = namePart ? "Холодник " + namePart : "";
+        const finalOperator = opSelect === 'custom' ? opCustom : opSelect;
+        const finalPhoneLine = phone + (finalOperator ? " " + finalOperator : "");
+        const finalDocsStr = docLines.length > 0 ? docLines.join('\n') : 'Документ ...';
 
-        navigator.clipboard.writeText(finalStr).then(() => {
-            showToast("✔ Успешно скопировано!", true);
+        const finalReport = `${finalNick}\nДМФ сип кассетка ${dmfSelection}\nФИО: ${fioDate}\nНомер телефона: ${finalPhoneLine}\nКод который он дал ${clientCode} ${codeOrg}\n${finalDocsStr}\nНа русском : ${isRussianGood ? 'хорошо' : 'плохо'}\nПочта: ${email}\nМой номер: ${myPhone}\nОписание: ${desc}`;
+
+        navigator.clipboard.writeText(finalReport).then(() => {
+            const overlay = document.getElementById('success-overlay');
+            overlay.className = 'show';
+            setTimeout(() => {
+                overlay.className = '';
+            }, 600);
         });
     }
 
     function changeTheme(themeName) {
         document.body.className = 'theme-' + themeName;
         localStorage.setItem('saved_theme', themeName);
+        
         document.getElementById('money-bg').style.display = (themeName === 'money') ? 'block' : 'none';
         document.getElementById('canvas-sakura').style.display = (themeName === 'sakura') ? 'block' : 'none';
+
         if (activeAnimation) cancelAnimationFrame(activeAnimation);
         if (themeName === 'sakura') startSakura();
     }
@@ -481,23 +537,41 @@
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         const petals = [];
+        
         for (let i = 0; i < 35; i++) {
             petals.push({
-                x: Math.random() * canvas.width, y: Math.random() * canvas.height - canvas.height,
-                w: Math.random() * 6 + 6, h: Math.random() * 4 + 4, opacity: Math.random() * 0.4 + 0.5,
-                speedY: Math.random() * 0.8 + 0.8, speedX: Math.random() * 1 - 0.3,
-                rotation: Math.random() * Math.PI, rotationSpeed: Math.random() * 0.02 - 0.01
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height - canvas.height,
+                w: Math.random() * 6 + 6,
+                h: Math.random() * 4 + 4,
+                opacity: Math.random() * 0.4 + 0.5,
+                speedY: Math.random() * 0.8 + 0.8,
+                speedX: Math.random() * 1 - 0.3,
+                rotation: Math.random() * Math.PI,
+                rotationSpeed: Math.random() * 0.02 - 0.01
             });
         }
+        
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             for (let i = 0; i < petals.length; i++) {
-                const p = petals[i]; ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rotation);
-                ctx.fillStyle = `rgba(255, 174, 191, ${p.opacity})`; ctx.beginPath();
-                ctx.ellipse(0, 0, p.w, p.h, 0, 0, 2 * Math.PI); ctx.fill(); ctx.restore();
-                p.y += p.speedY; p.x += p.speedX + Math.sin(p.y / 30) * 0.3; p.rotation += p.rotationSpeed;
+                const p = petals[i];
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.rotation);
+                ctx.fillStyle = `rgba(255, 174, 191, ${p.opacity})`;
+                ctx.beginPath();
+                ctx.ellipse(0, 0, p.w, p.h, 0, 0, 2 * Math.PI);
+                ctx.fill();
+                ctx.restore();
+                
+                p.y += p.speedY;
+                p.x += p.speedX + Math.sin(p.y / 30) * 0.3;
+                p.rotation += p.rotationSpeed;
+                
                 if (p.y > canvas.height || p.x > canvas.width || p.x < -20) {
-                    petals[i].y = -10; petals[i].x = Math.random() * canvas.width;
+                    petals[i].y = -10;
+                    petals[i].x = Math.random() * canvas.width;
                 }
             }
             activeAnimation = requestAnimationFrame(draw);
