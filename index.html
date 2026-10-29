@@ -26,18 +26,11 @@
         .bg-gif { width: 100%; height: 100%; background: url('money.gif') center/cover no-repeat; opacity: 0.35; display: none; }
         canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; }
 
-        /* НОВЫЙ ОСНОВНОЙ СТИЛЬ ИЗ CRM */
         body.theme-crm {
-            --bg-color: #10161d;
-            --panel-bg: #1c2430;
-            --text-color: #ffffff;
-            --accent-color: #3ad385; /* Мятно-зеленый */
-            --border-color: #2a3340;
-            --input-bg: #0b1016;
-            --input-text: #ffffff;
-            --label-color: #7b8a9c;
+            --bg-color: #10161d; --panel-bg: #1c2430; --text-color: #ffffff;
+            --accent-color: #3ad385; --border-color: #2a3340; --input-bg: #0b1016;
+            --input-text: #ffffff; --label-color: #7b8a9c;
         }
-        
         body.theme-money {
             --bg-color: #050505; --panel-bg: rgba(15, 15, 15, 0.98); --text-color: #ffffff; --accent-color: #00ffcc; --border-color: #00ffcc; --input-bg: #101010; --input-text: #ffffff;
         }
@@ -58,76 +51,51 @@
             box-sizing: border-box; z-index: 2; transition: background 0.3s, border 0.3s;
         }
 
-        .title-spacing { height: 5px; }
-        
-        h3 { 
-            margin: 5px 0 2px 0; color: #ffb300; font-size: 13px; text-transform: uppercase; 
-            font-weight: 700; letter-spacing: 0.5px;
-        }
-        
-        /* Специфичные правки под стиль CRM */
+        h3 { margin: 5px 0 2px 0; color: #ffb300; font-size: 13px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
         body.theme-crm h3 { color: #ffffff; font-size: 13px; letter-spacing: 0.5px; margin-top: 5px; }
-        body.theme-crm label { 
-            font-size: 10px; color: var(--label-color); text-transform: uppercase; 
-            letter-spacing: 1px; font-weight: 700; margin-bottom: -2px;
-        }
-        
+        body.theme-crm label { font-size: 10px; color: var(--label-color); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: -2px; }
         body.theme-sakura h3 { color: #c2185b; }
         
         .row { display: flex; flex-direction: column; gap: 6px; }
         .row-inline { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-        
         label { font-size: 12px; color: var(--label-color, var(--text-color)); opacity: 0.9; font-weight: 600; }
         
         input[type="text"], select, textarea {
             background: var(--input-bg); border: 1px solid var(--border-color); color: var(--input-text);
-            padding: 10px 12px; border-radius: 8px; font-size: 14px; transition: all 0.2s; box-sizing: border-box;
-            width: 100%;
+            padding: 10px 12px; border-radius: 8px; font-size: 14px; transition: all 0.2s; box-sizing: border-box; width: 100%;
         }
-        input[type="text"]:focus, select:focus, textarea:focus { 
-            border-color: var(--accent-color); outline: none; 
-            box-shadow: 0 0 0 1px var(--accent-color); 
-        }
-        
+        input[type="text"]:focus, select:focus, textarea:focus { border-color: var(--accent-color); outline: none; box-shadow: 0 0 0 1px var(--accent-color); }
         textarea { resize: vertical; min-height: 55px; font-family: inherit; }
 
         .theme-selector { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 5px; background: rgba(0,0,0,0.15); padding: 5px; border-radius: 8px; }
-        .theme-btn { 
-            flex: 1; min-width: 65px; padding: 6px; font-size: 10px; font-weight: bold; 
-            border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; 
-            background: var(--input-bg); color: var(--input-text); text-align: center; transition: 0.2s;
-        }
+        .theme-btn { flex: 1; min-width: 65px; padding: 6px; font-size: 10px; font-weight: bold; border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; background: var(--input-bg); color: var(--input-text); text-align: center; transition: 0.2s; }
         .theme-btn:hover { background: var(--accent-color); color: #000; border-color: var(--accent-color); }
 
-        .dmf-btn {
-            flex: 1; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--input-text);
-            padding: 8px; font-weight: bold; border-radius: 8px; cursor: pointer; font-size: 14px; transition: 0.2s;
-        }
+        .dmf-btn { flex: 1; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--input-text); padding: 8px; font-weight: bold; border-radius: 8px; cursor: pointer; font-size: 14px; transition: 0.2s; }
         .dmf-btn.active.plus { background: #1b5e20; border-color: #4caf50; color: #fff; }
         .dmf-btn.active.minus { background: #b71c1c; border-color: #f44336; color: #fff; }
-        
         body.theme-crm .dmf-btn.active.plus { background: rgba(58, 211, 133, 0.15); border-color: var(--accent-color); color: var(--accent-color); }
 
-        .fast-btn {
-            background: var(--input-bg); border: 1px solid var(--border-color); color: var(--input-text);
-            padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 12px; transition: 0.2s;
-        }
+        .fast-btn { background: var(--input-bg); border: 1px solid var(--border-color); color: var(--input-text); padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 12px; transition: 0.2s; }
         .fast-btn:hover { border-color: var(--accent-color); color: var(--accent-color); }
         
         .toggle-group { display: flex; gap: 6px; background: var(--input-bg); padding: 4px; border-radius: 8px; border: 1px solid var(--border-color); width: 100%; box-sizing: border-box; }
         .toggle-btn { flex: 1; text-align: center; padding: 7px; font-size: 12px; font-weight: bold; cursor: pointer; border-radius: 6px; color: var(--label-color); transition: 0.2s; }
         .toggle-btn.active.good { background: #2e7d32; color: #fff; }
         .toggle-btn.active.bad { background: #c62828; color: #fff; }
-        
         body.theme-crm .toggle-btn.active.good { background: rgba(58, 211, 133, 0.15); color: var(--accent-color); }
 
+        /* Анимация и класс ошибки */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+        }
+        .shake { animation: shake 0.4s ease-in-out; }
         .error-border { border-color: #ff5252 !important; background: rgba(255, 82, 82, 0.05) !important; }
         
-        .preview-box {
-            display: none; background: #000; border: 1px solid var(--border-color); border-radius: 8px;
-            padding: 12px; font-family: monospace; font-size: 12px; color: #00ff00;
-            white-space: pre-wrap; word-break: break-all; max-height: 140px; overflow-y: auto; margin-top: 2px;
-        }
+        .preview-box { display: none; background: #000; border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; font-family: monospace; font-size: 12px; color: #00ff00; white-space: pre-wrap; word-break: break-all; max-height: 140px; overflow-y: auto; margin-top: 2px; }
         body.theme-sakura .preview-box { background: #fff0f2; color: #4a282c; }
         body.theme-light .preview-box { background: #fafafa; color: #333; }
         body.theme-money .preview-box { color: #fff; border-color: var(--accent-color); }
@@ -137,13 +105,8 @@
         .action-btn { width: 100%; border: none; padding: 12px; border-radius: 8px; font-size: 13px; font-weight: bold; cursor: pointer; transition: 0.2s; color: white; }
         .btn-basis { background: #1b5e20; } .btn-basis:hover { background: #2e7d32; }
         .btn-part2 { background: #e65100; } .btn-part2:hover { background: #f57c00; }
-        
-        /* Главная кнопка в стиле CRM */
         .btn-full { background: #0d47a1; } .btn-full:hover { background: #1565c0; }
-        body.theme-crm .btn-full { 
-            background: var(--accent-color); color: #000; font-size: 14px; 
-            box-shadow: 0 4px 15px rgba(58, 211, 133, 0.15); 
-        }
+        body.theme-crm .btn-full { background: var(--accent-color); color: #000; font-size: 14px; box-shadow: 0 4px 15px rgba(58, 211, 133, 0.15); }
         body.theme-crm .btn-full:hover { background: #32ba75; }
         
         .btn-preview { background: transparent; border: 1px solid var(--border-color); color: var(--accent-color); }
@@ -151,21 +114,13 @@
         .btn-clear { background: #37474f; margin-top: 2px; } .btn-clear:hover { background: #455a64; }
         body.theme-crm .btn-clear { background: transparent; border: 1px solid var(--border-color); color: #ff5252; }
         
-        .btn-small-copy {
-            width: 100%; padding: 8px; font-size: 12px; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; color: white; transition: 0.15s; margin-top: 4px;
-        }
+        .btn-small-copy { width: 100%; padding: 8px; font-size: 12px; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; color: white; transition: 0.15s; margin-top: 4px; }
         .btn-small-copy.basis { background: #2e7d32; } .btn-small-copy.basis:hover { background: #388e3c; }
         .btn-small-copy.part2 { background: #ef6c00; } .btn-small-copy.part2:hover { background: #f57c00; }
-        
         body.theme-crm .btn-small-copy.basis { background: #1e3a2a; color: #3ad385; border: 1px solid #2a4a35; }
         body.theme-crm .btn-small-copy.part2 { background: #3a2510; color: #ff9800; border: 1px solid #4a3015; }
 
-        .action-btn:disabled, .btn-small-copy:disabled { background: #222 !important; color: #555 !important; cursor: not-allowed; border: 1px solid transparent !important; box-shadow: none !important;}
-        body.theme-light .action-btn:disabled, body.theme-light .btn-small-copy:disabled { background: #e0e0e0 !important; color: #999 !important; }
-        body.theme-crm .action-btn:disabled, body.theme-crm .btn-small-copy:disabled { background: var(--input-bg) !important; color: var(--label-color) !important; border: 1px solid var(--border-color) !important; }
-
         .divider { border-top: 1px dashed var(--border-color); margin: 6px 0; opacity: 0.5; }
-        
         .nick-input-container { display: flex; align-items: center; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; padding-left: 12px; transition: 0.2s; }
         .nick-input-container:focus-within { border-color: var(--accent-color); box-shadow: 0 0 0 1px var(--accent-color); }
         .nick-prefix { font-size: 14px; font-weight: bold; color: var(--accent-color); padding-right: 8px; user-select: none; }
@@ -176,31 +131,26 @@
         .doc-row span { font-size: 13px; width: 70px; font-weight: bold; color: var(--text-color); }
         .doc-row input[type="text"] { flex: 1; }
 
-        #success-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            display: flex; align-items: center; justify-content: center;
-            z-index: 9999; pointer-events: none; opacity: 0;
-            transition: opacity 0.4s ease-out;
+        /* Система уведомлений Toast */
+        #toast-container {
+            position: fixed; bottom: 20px; right: 20px; z-index: 10000;
+            display: flex; flex-direction: column; gap: 10px; pointer-events: none;
         }
-        #success-overlay.show { opacity: 1; }
-        .success-checkmark {
-            font-size: 120px; color: var(--accent-color); text-shadow: 0 0 30px rgba(58,211,133,0.4);
-            transform: scale(0.5); transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        .toast {
+            background: #ff5252; color: #fff; padding: 12px 20px; border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4); font-size: 13px; font-weight: bold;
+            opacity: 0; transform: translateX(50px); transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
-        #success-overlay.show .success-checkmark { transform: scale(1); }
+        .toast.show { opacity: 1; transform: translateX(0); }
+        .toast.success { background: var(--accent-color); color: #000; box-shadow: 0 4px 15px rgba(58, 211, 133, 0.2); }
 
-        .footer-credits {
-            text-align: center; font-size: 11px; margin-top: 10px; opacity: 0.5; color: var(--text-color);
-        }
+        .footer-credits { text-align: center; font-size: 11px; margin-top: 10px; opacity: 0.5; color: var(--text-color); }
         .footer-credits a { color: var(--accent-color); text-decoration: none; font-weight: bold; }
     </style>
 </head>
-<!-- Ставим CRM тему по умолчанию прямо в body -->
 <body class="theme-crm">
 
-    <div id="success-overlay">
-        <div class="success-checkmark">✔</div>
-    </div>
+    <div id="toast-container"></div>
 
     <div id="bg-container">
         <div class="bg-gif" id="money-bg"></div>
@@ -220,9 +170,9 @@
         
         <div class="row">
             <label>Твой ник:</label>
-            <div class="nick-input-container">
+            <div class="nick-input-container" id="wrap_username">
                 <span class="nick-prefix">Холодник</span>
-                <input type="text" id="username_custom" placeholder="Александр" oninput="saveNick(); validateForm();">
+                <input type="text" id="username_custom" placeholder="Александр" oninput="saveNick(); removeError(this);">
             </div>
         </div>
 
@@ -239,14 +189,14 @@
 
         <div class="row">
             <label>ФИО и Дата рождения:</label>
-            <input type="text" id="fio_date" placeholder="Петров Алексей Владимирович 12.08.1996" oninput="processFIO(); validateForm();">
+            <input type="text" id="fio_date" placeholder="Петров Алексей Владимирович 12.08.1996" oninput="processFIO(); removeError(this);">
         </div>
 
         <div class="row">
             <label>Номер телефона и Оператор:</label>
             <div class="row-inline">
-                <input type="text" id="client_phone" placeholder="+79008889911" style="flex: 1; min-width: 140px;" oninput="validateForm();">
-                <select id="operator_select" onchange="toggleOperatorInput(); validateForm();" style="width: 110px;">
+                <input type="text" id="client_phone" placeholder="+79008889911" style="flex: 1; min-width: 140px;" oninput="removeError(this);">
+                <select id="operator_select" onchange="toggleOperatorInput();" style="width: 110px;">
                     <option value="МТС">МТС</option>
                     <option value="Мегафон">Мегафон</option>
                     <option value="Билайн">Билайн</option>
@@ -255,14 +205,14 @@
                     <option value="custom">Свой...</option>
                 </select>
             </div>
-            <input type="text" id="operator_custom" placeholder="Введи оператора вручную" style="display:none; margin-top:4px;" oninput="validateForm();">
+            <input type="text" id="operator_custom" placeholder="Введи оператора вручную" style="display:none; margin-top:4px;" oninput="removeError(this);">
         </div>
 
         <div class="row">
             <label>Код и Организация (Если не Лента/2Берега — пиши вручную):</label>
             <div class="row-inline">
-                <input type="text" id="client_code" placeholder="4567" style="width: 65px;" oninput="validateForm();">
-                <input type="text" id="code_org" placeholder="Название" style="flex:1; min-width: 100px;" oninput="validateForm();">
+                <input type="text" id="client_code" placeholder="4567" style="width: 65px;" oninput="removeError(this);">
+                <input type="text" id="code_org" placeholder="Название" style="flex:1; min-width: 100px;" oninput="removeError(this);">
                 <button class="fast-btn" onclick="setOrg('Лента')">Лента</button>
                 <button class="fast-btn" onclick="setOrg('2Берега')">2Берега</button>
             </div>
@@ -272,21 +222,21 @@
             <label>Документы (отметь нужные галочкой):</label>
             
             <div class="doc-row">
-                <input type="checkbox" id="use_snils" onchange="validateForm();">
+                <input type="checkbox" id="use_snils" onchange="removeError(document.getElementById('doc_snils'));">
                 <span>СНИЛС:</span>
-                <input type="text" id="doc_snils" placeholder="11 цифр" oninput="validateForm();">
+                <input type="text" id="doc_snils" placeholder="11 цифр" oninput="removeError(this);">
             </div>
 
             <div class="doc-row">
-                <input type="checkbox" id="use_passport" onchange="validateForm();">
+                <input type="checkbox" id="use_passport" onchange="removeError(document.getElementById('doc_passport'));">
                 <span>Паспорт:</span>
-                <input type="text" id="doc_passport" placeholder="10 цифр" oninput="validateForm();">
+                <input type="text" id="doc_passport" placeholder="10 цифр" oninput="removeError(this);">
             </div>
 
             <div class="doc-row">
-                <input type="checkbox" id="use_inn" onchange="validateForm();">
+                <input type="checkbox" id="use_inn" onchange="removeError(document.getElementById('doc_inn'));">
                 <span>ИНН:</span>
-                <input type="text" id="doc_inn" placeholder="12 цифр" oninput="validateForm();">
+                <input type="text" id="doc_inn" placeholder="12 цифр" oninput="removeError(this);">
             </div>
         </div>
 
@@ -298,34 +248,34 @@
             </div>
         </div>
 
-        <button class="btn-small-copy basis" id="btn-copy-basis" disabled onclick="copyReport('basis')">📋 СКОПИРОВАТЬ ОСНОВУ</button>
+        <button class="btn-small-copy basis" onclick="copyReport('basis')">📋 СКОПИРОВАТЬ ОСНОВУ</button>
 
         <div class="divider"></div>
         <h3>Часть 2: Доп. Инфо</h3>
 
         <div class="row">
             <label>Почта:</label>
-            <input type="text" id="email" placeholder="example@mail.ru" oninput="validateForm();">
+            <input type="text" id="email" placeholder="example@mail.ru" oninput="removeError(this);">
         </div>
         <div class="row">
             <label>Мой номер (Обязательно укажи детали после номера!):</label>
-            <input type="text" id="my_phone" placeholder="+79225556677 10:20 1:45" oninput="validateForm();">
+            <input type="text" id="my_phone" placeholder="+79225556677 10:20 1:45" oninput="removeError(this);">
         </div>
         <div class="row">
             <label>Описание:</label>
-            <textarea id="description" placeholder="Краткий контекст по клиенту" oninput="validateForm();"></textarea>
+            <textarea id="description" placeholder="Краткий контекст по клиенту" oninput="removeError(this);"></textarea>
         </div>
 
-        <button class="btn-small-copy part2" id="btn-copy-part2" disabled onclick="copyReport('part2')">🔸 СКОПИРОВАТЬ ВТОРУЮ ЧАСТЬ</button>
+        <button class="btn-small-copy part2" onclick="copyReport('part2')">🔸 СКОПИРОВАТЬ ВТОРУЮ ЧАСТЬ</button>
 
         <div class="divider"></div>
-        <button class="action-btn btn-full" id="btn-full-btn" disabled onclick="copyReport('full')">🚀 СКОПИРОВАТЬ ВЕСЬ ОТЧЁТ</button>
+        <button class="action-btn btn-full" onclick="copyReport('full')">🚀 ДОБАВИТЬ ЛИД (СКОПИРОВАТЬ)</button>
         <button class="action-btn btn-preview" onclick="togglePreview()">👁 ПОКАЗАТЬ / СКРЫТЬ ПРЕВЬЮ</button>
         <div class="preview-box" id="preview-output"></div>
         <button class="action-btn btn-clear" onclick="clearForm()">🧹 ОЧИСТИТЬ ФОРМУ</button>
 
         <div class="footer-credits">
-            Нашли баг или есть идея? ТГ: <a href="https://t.me/aivenos" target="_blank">@x007am98</a>
+            Нашли баг или есть идея? ТГ: <a href="https://t.me/x007am98" target="_blank">@x007am98</a>
         </div>
     </div>
 
@@ -335,32 +285,41 @@
     let activeAnimation = null;
 
     window.onload = function() {
-        if(localStorage.getItem('saved_only_name')) {
-            document.getElementById('username_custom').value = localStorage.getItem('saved_only_name');
-        }
-        if(localStorage.getItem('saved_theme')) {
-            changeTheme(localStorage.getItem('saved_theme'));
-        } else {
-            // Если сохраненной темы нет, ставим новую тему CRM
-            changeTheme('crm');
-        }
-        validateForm();
+        if(localStorage.getItem('saved_only_name')) document.getElementById('username_custom').value = localStorage.getItem('saved_only_name');
+        changeTheme(localStorage.getItem('saved_theme') || 'crm');
+        updatePreviewLive();
     }
 
-    function saveNick() { 
-        localStorage.setItem('saved_only_name', document.getElementById('username_custom').value); 
+    // Система тостов (уведомлений)
+    function showToast(msg, isSuccess = false) {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = `toast ${isSuccess ? 'success' : ''}`;
+        toast.innerText = msg;
+        container.appendChild(toast);
+        setTimeout(() => toast.classList.add('show'), 10);
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
     }
+
+    function removeError(el) {
+        el.classList.remove('error-border');
+        if(el.id === 'username_custom') document.getElementById('wrap_username').classList.remove('error-border');
+        updatePreviewLive();
+    }
+
+    function saveNick() { localStorage.setItem('saved_only_name', document.getElementById('username_custom').value); }
 
     function processFIO() {
         const input = document.getElementById('fio_date');
         let val = input.value;
-        
         const dateRegex = /(\b\d{2}\.\d{2}\.\d{4})$/;
         let matchedDate = val.match(dateRegex);
         let dateStr = matchedDate ? matchedDate[1] : "";
         let textStr = matchedDate ? val.replace(dateRegex, '') : val;
-
-        let normalizedText = textStr.toLowerCase().replace(/(^|\s)\S/g, function(l) { return l.toUpperCase(); });
+        let normalizedText = textStr.toLowerCase().replace(/(^|\s)\S/g, l => l.toUpperCase());
         let finalVal = normalizedText.trim() + (dateStr ? " " + dateStr : "");
         
         if(val.toUpperCase() === finalVal.toUpperCase() && val !== finalVal) {
@@ -374,22 +333,25 @@
         dmfSelection = val;
         document.getElementById('dmf-plus').className = val === '+' ? 'dmf-btn active plus' : 'dmf-btn';
         document.getElementById('dmf-minus').className = val === '-' ? 'dmf-btn active minus' : 'dmf-btn';
-        validateForm();
+        updatePreviewLive();
     }
 
     function setLang(isGood) {
         isRussianGood = isGood;
         document.getElementById('lang-good').className = isGood ? 'toggle-btn active good' : 'toggle-btn';
         document.getElementById('lang-bad').className = !isGood ? 'toggle-btn active bad' : 'toggle-btn';
-        validateForm();
+        updatePreviewLive();
     }
 
     function toggleOperatorInput() {
         const select = document.getElementById('operator_select');
-        document.getElementById('operator_custom').style.display = select.value === 'custom' ? 'block' : 'none';
+        const custom = document.getElementById('operator_custom');
+        custom.style.display = select.value === 'custom' ? 'block' : 'none';
+        removeError(custom);
+        updatePreviewLive();
     }
 
-    function setOrg(name) { document.getElementById('code_org').value = name; validateForm(); }
+    function setOrg(name) { document.getElementById('code_org').value = name; removeError(document.getElementById('code_org')); }
 
     function togglePreview() {
         const box = document.getElementById('preview-output');
@@ -398,162 +360,118 @@
 
     function clearForm() {
         setDmf('');
-        document.getElementById('fio_date').value = '';
-        document.getElementById('fio_date').classList.remove('error-border');
-        document.getElementById('client_phone').value = '';
-        document.getElementById('client_phone').classList.remove('error-border');
+        document.querySelectorAll('input[type="text"], textarea').forEach(el => { el.value = ''; el.classList.remove('error-border'); });
+        document.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = false);
         document.getElementById('operator_select').value = 'МТС';
-        document.getElementById('operator_custom').value = '';
         document.getElementById('operator_custom').style.display = 'none';
-        document.getElementById('client_code').value = '';
-        document.getElementById('code_org').value = '';
-        
-        document.getElementById('use_snils').checked = false;
-        document.getElementById('doc_snils').value = '';
-        document.getElementById('doc_snils').classList.remove('error-border');
-        document.getElementById('use_passport').checked = false;
-        document.getElementById('doc_passport').value = '';
-        document.getElementById('doc_passport').classList.remove('error-border');
-        document.getElementById('use_inn').checked = false;
-        document.getElementById('doc_inn').value = '';
-        document.getElementById('doc_inn').classList.remove('error-border');
-
+        document.getElementById('wrap_username').classList.remove('error-border');
         setLang(true);
-        document.getElementById('email').value = '';
-        document.getElementById('my_phone').value = '';
-        document.getElementById('description').value = '';
-        validateForm();
+        if(localStorage.getItem('saved_only_name')) document.getElementById('username_custom').value = localStorage.getItem('saved_only_name');
+        updatePreviewLive();
     }
 
     function getReportData() {
         const namePart = document.getElementById('username_custom').value.trim();
-        const finalNick = namePart ? "Холодник " + namePart : "";
-
         const phoneNum = document.getElementById('client_phone').value.trim();
         const opSelect = document.getElementById('operator_select').value;
         const opCustom = document.getElementById('operator_custom').value.trim();
         const finalOperator = opSelect === 'custom' ? opCustom : opSelect;
-        const finalPhoneLine = phoneNum + (finalOperator ? " " + finalOperator : "");
-
-        const fioDate = document.getElementById('fio_date').value.trim();
-        const clientCode = document.getElementById('client_code').value.trim();
-        const codeOrg = document.getElementById('code_org').value.trim();
         
         let docLines = [];
-        if(document.getElementById('use_snils').checked) {
-            let val = document.getElementById('doc_snils').value.trim().replace(/\D/g, '');
-            docLines.push(`СНИЛС ${val || '...'}`);
-        }
-        if(document.getElementById('use_passport').checked) {
-            let val = document.getElementById('doc_passport').value.trim().replace(/\D/g, '');
-            docLines.push(`Паспорт ${val || '...'}`);
-        }
-        if(document.getElementById('use_inn').checked) {
-            let val = document.getElementById('doc_inn').value.trim().replace(/\D/g, '');
-            docLines.push(`ИНН ${val || '...'}`);
-        }
-        let finalDocsStr = docLines.length > 0 ? docLines.join('\n') : 'Документ ...';
+        if(document.getElementById('use_snils').checked) docLines.push(`СНИЛС ${document.getElementById('doc_snils').value.trim().replace(/\D/g, '') || '...'}`);
+        if(document.getElementById('use_passport').checked) docLines.push(`Паспорт ${document.getElementById('doc_passport').value.trim().replace(/\D/g, '') || '...'}`);
+        if(document.getElementById('use_inn').checked) docLines.push(`ИНН ${document.getElementById('doc_inn').value.trim().replace(/\D/g, '') || '...'}`);
 
-        let part1 = `${finalNick || '...'}\nДМФ сип кассетка ${dmfSelection || '...'}\nФИО: ${fioDate || '...'}\nНомер телефона: ${finalPhoneLine || '...'}\nКод который он дал ${clientCode || '...'} ${codeOrg || '...'}\n${finalDocsStr}\nНа русском : ${isRussianGood ? 'хорошо' : 'плохо'}`;
+        const p1 = `${namePart ? "Холодник "+namePart : '...'}\nДМФ сип кассетка ${dmfSelection || '...'}\nФИО: ${document.getElementById('fio_date').value.trim() || '...'}\nНомер телефона: ${phoneNum + (finalOperator ? " "+finalOperator : '') || '...'}\nКод который он дал ${document.getElementById('client_code').value.trim() || '...'} ${document.getElementById('code_org').value.trim() || '...'}\n${docLines.length>0 ? docLines.join('\n') : 'Документ ...'}\nНа русском : ${isRussianGood ? 'хорошо' : 'плохо'}`;
+        const p2 = `Почта: ${document.getElementById('email').value.trim() || '...'}\nМой номер: ${document.getElementById('my_phone').value.trim() || '...'}\nОписание: ${document.getElementById('description').value.trim() || '...'}`;
 
-        let rawEmail = document.getElementById('email').value.trim();
-        let rawMyPhone = document.getElementById('my_phone').value.trim();
-        let rawDesc = document.getElementById('description').value.trim();
-
-        let part2 = `Почта: ${rawEmail || '...'}\nМой номер: ${rawMyPhone || '...'}\nОписание: ${rawDesc || '...'}`;
-
-        return { part1, part2, namePart, phoneNum, finalOperator, fioDate, clientCode, codeOrg, rawEmail, rawMyPhone, rawDesc };
+        return { p1, p2, namePart, phoneNum, finalOperator, opSelect, opCustom };
     }
 
-    function validateForm() {
+    function updatePreviewLive() {
         const d = getReportData();
-        let basisValid = true;
-        let part2Valid = true;
+        document.getElementById('preview-output').innerText = d.p1 + '\n' + d.p2;
+    }
 
-        const dateRegex = /\b\d{2}\.\d{2}\.\d{4}$/;
-        const wordsCount = d.fioDate.replace(dateRegex, '').trim().split(/\s+/).filter(Boolean).length;
-        const isFioValid = dateRegex.test(d.fioDate) && wordsCount >= 3;
-        if(d.fioDate) document.getElementById('fio_date').classList.toggle('error-border', !isFioValid);
-
-        const isPhoneValid = d.phoneNum.startsWith('+') && d.phoneNum.length >= 11;
-        if(d.phoneNum) document.getElementById('client_phone').classList.toggle('error-border', !isPhoneValid);
-
-        let docsValid = true;
-        let anyDocChecked = false;
-
-        if(document.getElementById('use_snils').checked) {
-            anyDocChecked = true;
-            let val = document.getElementById('doc_snils').value.trim().replace(/\D/g, '');
-            let isValid = val.length === 11;
-            document.getElementById('doc_snils').classList.toggle('error-border', !isValid);
-            if(!isValid) docsValid = false;
-        } else {
-            document.getElementById('doc_snils').classList.remove('error-border');
-        }
-
-        if(document.getElementById('use_passport').checked) {
-            anyDocChecked = true;
-            let val = document.getElementById('doc_passport').value.trim().replace(/\D/g, '');
-            let isValid = val.length === 10;
-            document.getElementById('doc_passport').classList.toggle('error-border', !isValid);
-            if(!isValid) docsValid = false;
-        } else {
-            document.getElementById('doc_passport').classList.remove('error-border');
-        }
-
-        if(document.getElementById('use_inn').checked) {
-            anyDocChecked = true;
-            let val = document.getElementById('doc_inn').value.trim().replace(/\D/g, '');
-            let isValid = val.length === 12;
-            document.getElementById('doc_inn').classList.toggle('error-border', !isValid);
-            if(!isValid) docsValid = false;
-        } else {
-            document.getElementById('doc_inn').classList.remove('error-border');
-        }
-
-        const phoneWithDetailsRegex = /^\+?\d{10,12}\s+\S+/;
-        const isMyPhoneFilledCorrectly = phoneWithDetailsRegex.test(d.rawMyPhone);
-
-        if(!d.namePart || !dmfSelection || !isFioValid || !isPhoneValid || !d.finalOperator || !d.clientCode || !d.codeOrg || !anyDocChecked || !docsValid) {
-            basisValid = false;
-        }
-
-        if(!d.rawEmail || !d.rawMyPhone || !isMyPhoneFilledCorrectly || !d.rawDesc) { 
-            part2Valid = false; 
-        }
-
-        document.getElementById('btn-copy-basis').disabled = !basisValid;
-        document.getElementById('btn-copy-part2').disabled = !part2Valid;
-        document.getElementById('btn-full-btn').disabled = !(basisValid && part2Valid);
-
-        document.getElementById('preview-output').innerText = d.part1 + '\n' + d.part2;
+    function markError(id, msg) {
+        const el = document.getElementById(id);
+        if(id === 'username_custom') document.getElementById('wrap_username').classList.add('error-border', 'shake');
+        else el.classList.add('error-border', 'shake');
+        
+        setTimeout(() => {
+            el.classList.remove('shake');
+            if(id === 'username_custom') document.getElementById('wrap_username').classList.remove('shake');
+        }, 400);
+        showToast("❌ " + msg);
     }
 
     function copyReport(type) {
-        const d = getReportData();
-        let finalStr = '';
+        let errors = [];
+        const fioDate = document.getElementById('fio_date').value.trim();
+        const dateRegex = /\b\d{2}\.\d{2}\.\d{4}$/;
+        
+        // Валидация Основы
+        if (type === 'basis' || type === 'full') {
+            if(!document.getElementById('username_custom').value.trim()) errors.push({id: 'username_custom', msg: 'Укажи свой ник!'});
+            if(!dmfSelection) errors.push({id: 'dmf-plus', msg: 'Выбери кассетку (+ или -)'});
+            if(!dateRegex.test(fioDate) || fioDate.replace(dateRegex, '').trim().split(/\s+/).filter(Boolean).length < 3) errors.push({id: 'fio_date', msg: 'ФИО: нужно 3 слова + дата (ДД.ММ.ГГГГ)'});
+            
+            const phone = document.getElementById('client_phone').value.trim();
+            if(!phone.startsWith('+') || phone.length < 11) errors.push({id: 'client_phone', msg: 'Телефон должен начинаться с + и содержать от 11 цифр'});
+            
+            const opSelect = document.getElementById('operator_select').value;
+            if(opSelect === 'custom' && !document.getElementById('operator_custom').value.trim()) errors.push({id: 'operator_custom', msg: 'Укажи оператора вручную'});
+            
+            if(!document.getElementById('client_code').value.trim()) errors.push({id: 'client_code', msg: 'Код пуст'});
+            if(!document.getElementById('code_org').value.trim()) errors.push({id: 'code_org', msg: 'Организация пуста'});
 
-        if(type === 'basis') finalStr = d.part1;
-        else if(type === 'part2') finalStr = d.part2;
-        else finalStr = d.part1 + '\n' + d.part2;
+            let docChecked = false;
+            if(document.getElementById('use_snils').checked) { docChecked = true; if(document.getElementById('doc_snils').value.replace(/\D/g, '').length !== 11) errors.push({id: 'doc_snils', msg: 'СНИЛС должен содержать 11 цифр'}); }
+            if(document.getElementById('use_passport').checked) { docChecked = true; if(document.getElementById('doc_passport').value.replace(/\D/g, '').length !== 10) errors.push({id: 'doc_passport', msg: 'Паспорт должен содержать 10 цифр'}); }
+            if(document.getElementById('use_inn').checked) { docChecked = true; if(document.getElementById('doc_inn').value.replace(/\D/g, '').length !== 12) errors.push({id: 'doc_inn', msg: 'ИНН должен содержать 12 цифр'}); }
+            
+            if(!docChecked) errors.push({id: 'use_snils', msg: 'Отметь хотя бы один документ!'});
+        }
+
+        // Валидация Доп Инфо
+        if (type === 'part2' || type === 'full') {
+            if(!document.getElementById('email').value.trim()) errors.push({id: 'email', msg: 'Почта пуста'});
+            if(!/^\+?\d{10,12}\s+\S+/.test(document.getElementById('my_phone').value.trim())) errors.push({id: 'my_phone', msg: 'Твой номер: нужен формат "+7... детали"'});
+            if(!document.getElementById('description').value.trim()) errors.push({id: 'description', msg: 'Заполни описание'});
+        }
+
+        if (errors.length > 0) {
+            // Берем только первую ошибку, чтобы не спамить тостами
+            markError(errors[0].id, errors[0].msg);
+            // Но красным выделяем и трясем всё неверное
+            errors.forEach(e => {
+                const el = document.getElementById(e.id);
+                if(el && el.id !== 'use_snils' && el.id !== 'dmf-plus') {
+                    if(el.id === 'username_custom') document.getElementById('wrap_username').classList.add('error-border', 'shake');
+                    else el.classList.add('error-border', 'shake');
+                    setTimeout(() => {
+                        el.classList.remove('shake');
+                        if(el.id === 'username_custom') document.getElementById('wrap_username').classList.remove('shake');
+                    }, 400);
+                }
+            });
+            return;
+        }
+
+        // Если все ок - копируем
+        const d = getReportData();
+        const finalStr = type === 'basis' ? d.p1 : (type === 'part2' ? d.p2 : d.p1 + '\n' + d.p2);
 
         navigator.clipboard.writeText(finalStr).then(() => {
-            const overlay = document.getElementById('success-overlay');
-            overlay.className = 'show';
-            
-            setTimeout(() => {
-                overlay.className = '';
-            }, 600); // Немного увеличил время галочки, чтобы смотрелось приятнее
+            showToast("✔ Успешно скопировано!", true);
         });
     }
 
     function changeTheme(themeName) {
         document.body.className = 'theme-' + themeName;
         localStorage.setItem('saved_theme', themeName);
-        
         document.getElementById('money-bg').style.display = (themeName === 'money') ? 'block' : 'none';
         document.getElementById('canvas-sakura').style.display = (themeName === 'sakura') ? 'block' : 'none';
-
         if (activeAnimation) cancelAnimationFrame(activeAnimation);
         if (themeName === 'sakura') startSakura();
     }
@@ -563,41 +481,23 @@
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         const petals = [];
-        
         for (let i = 0; i < 35; i++) {
             petals.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height - canvas.height,
-                w: Math.random() * 6 + 6,
-                h: Math.random() * 4 + 4,
-                opacity: Math.random() * 0.4 + 0.5,
-                speedY: Math.random() * 0.8 + 0.8,
-                speedX: Math.random() * 1 - 0.3,
-                rotation: Math.random() * Math.PI,
-                rotationSpeed: Math.random() * 0.02 - 0.01
+                x: Math.random() * canvas.width, y: Math.random() * canvas.height - canvas.height,
+                w: Math.random() * 6 + 6, h: Math.random() * 4 + 4, opacity: Math.random() * 0.4 + 0.5,
+                speedY: Math.random() * 0.8 + 0.8, speedX: Math.random() * 1 - 0.3,
+                rotation: Math.random() * Math.PI, rotationSpeed: Math.random() * 0.02 - 0.01
             });
         }
-        
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             for (let i = 0; i < petals.length; i++) {
-                const p = petals[i];
-                ctx.save();
-                ctx.translate(p.x, p.y);
-                ctx.rotate(p.rotation);
-                ctx.fillStyle = `rgba(255, 174, 191, ${p.opacity})`;
-                ctx.beginPath();
-                ctx.ellipse(0, 0, p.w, p.h, 0, 0, 2 * Math.PI);
-                ctx.fill();
-                ctx.restore();
-                
-                p.y += p.speedY;
-                p.x += p.speedX + Math.sin(p.y / 30) * 0.3;
-                p.rotation += p.rotationSpeed;
-                
+                const p = petals[i]; ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rotation);
+                ctx.fillStyle = `rgba(255, 174, 191, ${p.opacity})`; ctx.beginPath();
+                ctx.ellipse(0, 0, p.w, p.h, 0, 0, 2 * Math.PI); ctx.fill(); ctx.restore();
+                p.y += p.speedY; p.x += p.speedX + Math.sin(p.y / 30) * 0.3; p.rotation += p.rotationSpeed;
                 if (p.y > canvas.height || p.x > canvas.width || p.x < -20) {
-                    petals[i].y = -10;
-                    petals[i].x = Math.random() * canvas.width;
+                    petals[i].y = -10; petals[i].x = Math.random() * canvas.width;
                 }
             }
             activeAnimation = requestAnimationFrame(draw);
