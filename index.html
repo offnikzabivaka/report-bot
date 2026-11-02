@@ -26,12 +26,11 @@
         .bg-gif { width: 100%; height: 100%; background: url('money.gif') center/cover no-repeat; opacity: 0.35; display: none; }
         canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; }
 
-        /* НОВЫЙ ОСНОВНОЙ СТИЛЬ ИЗ CRM */
         body.theme-crm {
             --bg-color: #10161d;
             --panel-bg: #1c2430;
             --text-color: #ffffff;
-            --accent-color: #3ad385; /* Мятно-зеленый */
+            --accent-color: #3ad385;
             --border-color: #2a3340;
             --input-bg: #0b1016;
             --input-text: #ffffff;
@@ -64,13 +63,11 @@
             margin: 5px 0 2px 0; color: #ffb300; font-size: 13px; text-transform: uppercase; 
             font-weight: 700; letter-spacing: 0.5px;
         }
-        
         body.theme-crm h3 { color: #ffffff; font-size: 13px; letter-spacing: 0.5px; margin-top: 5px; }
         body.theme-crm label { 
             font-size: 10px; color: var(--label-color); text-transform: uppercase; 
             letter-spacing: 1px; font-weight: 700; margin-bottom: -2px;
         }
-        
         body.theme-sakura h3 { color: #c2185b; }
         
         .row { display: flex; flex-direction: column; gap: 6px; }
@@ -87,7 +84,6 @@
             border-color: var(--accent-color); outline: none; 
             box-shadow: 0 0 0 1px var(--accent-color); 
         }
-        
         textarea { resize: vertical; min-height: 55px; font-family: inherit; }
 
         .theme-selector { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 5px; background: rgba(0,0,0,0.15); padding: 5px; border-radius: 8px; }
@@ -118,7 +114,6 @@
         .toggle-btn.active.bad { background: #c62828; color: #fff; }
         body.theme-crm .toggle-btn.active.good { background: rgba(58, 211, 133, 0.15); color: var(--accent-color); }
 
-        /* Система активной валидации: Тряска и Красная рамка */
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
             25% { transform: translateX(-5px); }
@@ -128,7 +123,6 @@
         .shake { animation: shake 0.4s ease-in-out; }
         .error-border { border-color: #ff5252 !important; background: rgba(255, 82, 82, 0.05) !important; }
 
-        /* Всплывающие уведомления (Toast) */
         #toast-container {
             position: fixed; bottom: 20px; right: 20px; z-index: 10000;
             display: flex; flex-direction: column; gap: 10px; pointer-events: none;
@@ -151,6 +145,15 @@
         .btn-clear { background: #37474f; margin-top: 2px; } .btn-clear:hover { background: #455a64; }
         body.theme-crm .btn-clear { background: transparent; border: 1px solid var(--border-color); color: #ff5252; }
         
+        .btn-small-copy {
+            width: 100%; padding: 8px; font-size: 12px; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; color: white; transition: 0.15s; margin-top: 4px;
+        }
+        .btn-small-copy.basis { background: #2e7d32; } .btn-small-copy.basis:hover { background: #388e3c; }
+        .btn-small-copy.part2 { background: #ef6c00; } .btn-small-copy.part2:hover { background: #f57c00; }
+        
+        body.theme-crm .btn-small-copy.basis { background: #1e3a2a; color: #3ad385; border: 1px solid #2a4a35; }
+        body.theme-crm .btn-small-copy.part2 { background: #3a2510; color: #ff9800; border: 1px solid #4a3015; }
+
         .divider { border-top: 1px dashed var(--border-color); margin: 6px 0; opacity: 0.5; }
         
         .nick-input-container { display: flex; align-items: center; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; padding-left: 12px; transition: 0.2s; }
@@ -158,7 +161,6 @@
         .nick-prefix { font-size: 14px; font-weight: bold; color: var(--accent-color); padding-right: 8px; user-select: none; }
         .nick-input-container input { flex: 1; border: none !important; background: transparent !important; padding-left: 0 !important; box-shadow: none !important; }
 
-        /* Стили для умных документов */
         .doc-row { display: flex; align-items: center; gap: 10px; margin-top: 4px; }
         .doc-row span.doc-label { font-size: 13px; width: 65px; font-weight: bold; color: var(--text-color); }
         .doc-input-wrapper { position: relative; flex: 1; display: flex; align-items: center; }
@@ -221,6 +223,7 @@
         </div>
 
         <div class="divider"></div>
+        <h3>Часть 1: Основа</h3>
 
         <div class="row">
             <label>Кассетка:</label>
@@ -297,7 +300,10 @@
             </div>
         </div>
 
+        <button class="btn-small-copy basis" onclick="copyReport('basis')">📋 СКОПИРОВАТЬ ОСНОВУ</button>
+
         <div class="divider"></div>
+        <h3>Часть 2: Доп. Инфо</h3>
 
         <div class="row">
             <label>Почта:</label>
@@ -312,7 +318,10 @@
             <textarea id="description" placeholder="Краткий контекст по клиенту" oninput="removeError(this);"></textarea>
         </div>
 
-        <button class="action-btn btn-full" onclick="copyReport()">🚀 СКОПИРОВАТЬ ВЕСЬ ОТЧЁТ</button>
+        <button class="btn-small-copy part2" onclick="copyReport('part2')">🔸 СКОПИРОВАТЬ ВТОРУЮ ЧАСТЬ</button>
+
+        <div class="divider"></div>
+        <button class="action-btn btn-full" onclick="copyReport('full')">🚀 СКОПИРОВАТЬ ПОЛНЫЙ ОТЧЁТ</button>
         <button class="action-btn btn-clear" onclick="clearForm()">🧹 ОЧИСТИТЬ ФОРМУ</button>
 
         <div class="footer-credits">
@@ -333,7 +342,6 @@
         checkDocs();
     }
 
-    // Уведомления (Toast)
     function showToast(msg) {
         const container = document.getElementById('toast-container');
         const toast = document.createElement('div');
@@ -347,7 +355,6 @@
         }, 3000);
     }
 
-    // Убирает красную рамку, когда начинаешь вводить данные
     function removeError(el) {
         if(el) el.classList.remove('error-border');
         if(el && el.id === 'username_custom') document.getElementById('wrap_username').classList.remove('error-border');
@@ -403,7 +410,6 @@
         removeError(orgInput);
     }
 
-    // Проверка документов "на лету" - включает зеленую галочку, если длина правильная
     function checkDocs() {
         let snils = document.getElementById('doc_snils').value.replace(/\D/g, '');
         document.getElementById('status_snils').classList.toggle('valid', snils.length === 11);
@@ -428,7 +434,7 @@
         checkDocs();
     }
 
-    function copyReport() {
+    function copyReport(type) {
         let errors = [];
         const namePart = document.getElementById('username_custom').value.trim();
         const fioDate = document.getElementById('fio_date').value.trim();
@@ -438,48 +444,51 @@
         const opCustom = document.getElementById('operator_custom').value.trim();
         const clientCode = document.getElementById('client_code').value.trim();
         const codeOrg = document.getElementById('code_org').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const myPhone = document.getElementById('my_phone').value.trim();
-        const desc = document.getElementById('description').value.trim();
-
+        
         let snils = document.getElementById('doc_snils').value.replace(/\D/g, '');
         let pass = document.getElementById('doc_passport').value.replace(/\D/g, '');
         let inn = document.getElementById('doc_inn').value.replace(/\D/g, '');
 
-        // Проверки
-        if (!namePart) errors.push({id: 'username_custom', msg: 'Укажи свой ник!'});
-        if (!dmfSelection) errors.push({id: 'dmf-plus', msg: 'Выбери кассетку (+ или -)'});
-        if (!dateRegex.test(fioDate) || fioDate.replace(dateRegex, '').trim().split(/\s+/).filter(Boolean).length < 3) errors.push({id: 'fio_date', msg: 'ФИО: нужно 3 слова + дата (ДД.ММ.ГГГГ)'});
-        if (!phone.startsWith('+') || phone.length < 11) errors.push({id: 'client_phone', msg: 'Телефон: от 11 цифр и с +'});
-        if (opSelect === 'custom' && !opCustom) errors.push({id: 'operator_custom', msg: 'Укажи оператора вручную'});
-        if (!clientCode) errors.push({id: 'client_code', msg: 'Код пуст'});
-        if (!codeOrg) errors.push({id: 'code_org', msg: 'Организация пуста'});
+        // Валидация Основы
+        if (type === 'basis' || type === 'full') {
+            if (!namePart) errors.push({id: 'username_custom', msg: 'Укажи свой ник!'});
+            if (!dmfSelection) errors.push({id: 'dmf-plus', msg: 'Выбери кассетку (+ или -)'});
+            if (!dateRegex.test(fioDate) || fioDate.replace(dateRegex, '').trim().split(/\s+/).filter(Boolean).length < 3) errors.push({id: 'fio_date', msg: 'ФИО: нужно 3 слова + дата (ДД.ММ.ГГГГ)'});
+            if (!phone.startsWith('+') || phone.length < 11) errors.push({id: 'client_phone', msg: 'Телефон: от 11 цифр и с +'});
+            if (opSelect === 'custom' && !opCustom) errors.push({id: 'operator_custom', msg: 'Укажи оператора вручную'});
+            if (!clientCode) errors.push({id: 'client_code', msg: 'Код пуст'});
+            if (!codeOrg) errors.push({id: 'code_org', msg: 'Организация пуста'});
 
-        // Логика документов
-        let hasValidDoc = false;
-        let docLines = [];
-        
-        if (snils) {
-            if (snils.length === 11) { hasValidDoc = true; docLines.push(`СНИЛС ${snils}`); }
-            else errors.push({id: 'doc_snils', msg: 'СНИЛС должен содержать 11 цифр'});
-        }
-        if (pass) {
-            if (pass.length === 10) { hasValidDoc = true; docLines.push(`Паспорт ${pass}`); }
-            else errors.push({id: 'doc_passport', msg: 'Паспорт должен содержать 10 цифр'});
-        }
-        if (inn) {
-            if (inn.length === 12) { hasValidDoc = true; docLines.push(`ИНН ${inn}`); }
-            else errors.push({id: 'doc_inn', msg: 'ИНН должен содержать 12 цифр'});
-        }
-        if (!hasValidDoc && snils.length === 0 && pass.length === 0 && inn.length === 0) {
-            errors.push({id: 'doc_snils', msg: 'Укажи хотя бы один документ правильно!'});
+            let hasValidDoc = false;
+            let docLines = [];
+            if (snils) {
+                if (snils.length === 11) { hasValidDoc = true; docLines.push(`СНИЛС ${snils}`); }
+                else errors.push({id: 'doc_snils', msg: 'СНИЛС должен содержать 11 цифр'});
+            }
+            if (pass) {
+                if (pass.length === 10) { hasValidDoc = true; docLines.push(`Паспорт ${pass}`); }
+                else errors.push({id: 'doc_passport', msg: 'Паспорт должен содержать 10 цифр'});
+            }
+            if (inn) {
+                if (inn.length === 12) { hasValidDoc = true; docLines.push(`ИНН ${inn}`); }
+                else errors.push({id: 'doc_inn', msg: 'ИНН должен содержать 12 цифр'});
+            }
+            if (!hasValidDoc && snils.length === 0 && pass.length === 0 && inn.length === 0) {
+                errors.push({id: 'doc_snils', msg: 'Укажи хотя бы один документ правильно!'});
+            }
         }
 
-        if (!email) errors.push({id: 'email', msg: 'Почта пуста'});
-        if (!/^\+?\d{10,12}\s+\S+/.test(myPhone)) errors.push({id: 'my_phone', msg: 'Твой номер: нужен формат "+7... детали"'});
-        if (!desc) errors.push({id: 'description', msg: 'Заполни описание'});
+        const email = document.getElementById('email').value.trim();
+        const myPhone = document.getElementById('my_phone').value.trim();
+        const desc = document.getElementById('description').value.trim();
 
-        // Если есть ошибки - трясем поля и показываем тост
+        // Валидация Доп Инфо
+        if (type === 'part2' || type === 'full') {
+            if (!email) errors.push({id: 'email', msg: 'Почта пуста'});
+            if (!/^\+?\d{10,12}\s+\S+/.test(myPhone)) errors.push({id: 'my_phone', msg: 'Твой номер: нужен формат "+7... детали"'});
+            if (!desc) errors.push({id: 'description', msg: 'Заполни описание'});
+        }
+
         if (errors.length > 0) {
             showToast("❌ " + errors[0].msg);
             errors.forEach(e => {
@@ -504,13 +513,23 @@
             return;
         }
 
-        // Если всё окей - собираем единый отчет
         const finalNick = namePart ? "Холодник " + namePart : "";
         const finalOperator = opSelect === 'custom' ? opCustom : opSelect;
         const finalPhoneLine = phone + (finalOperator ? " " + finalOperator : "");
+        
+        let docLines = [];
+        if (snils.length === 11) docLines.push(`СНИЛС ${snils}`);
+        if (pass.length === 10) docLines.push(`Паспорт ${pass}`);
+        if (inn.length === 12) docLines.push(`ИНН ${inn}`);
         const finalDocsStr = docLines.length > 0 ? docLines.join('\n') : 'Документ ...';
 
-        const finalReport = `${finalNick}\nДМФ сип кассетка ${dmfSelection}\nФИО: ${fioDate}\nНомер телефона: ${finalPhoneLine}\nКод который он дал ${clientCode} ${codeOrg}\n${finalDocsStr}\nНа русском : ${isRussianGood ? 'хорошо' : 'плохо'}\nПочта: ${email}\nМой номер: ${myPhone}\nОписание: ${desc}`;
+        const part1 = `${finalNick}\nДМФ сип кассетка ${dmfSelection}\nФИО: ${fioDate}\nНомер телефона: ${finalPhoneLine}\nКод который он дал ${clientCode} ${codeOrg}\n${finalDocsStr}\nНа русском : ${isRussianGood ? 'хорошо' : 'плохо'}`;
+        const part2 = `Почта: ${email}\nМой номер: ${myPhone}\nОписание: ${desc}`;
+
+        let finalReport = '';
+        if (type === 'basis') finalReport = part1;
+        else if (type === 'part2') finalReport = part2;
+        else finalReport = part1 + '\n' + part2;
 
         navigator.clipboard.writeText(finalReport).then(() => {
             const overlay = document.getElementById('success-overlay');
