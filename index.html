@@ -238,6 +238,7 @@
         <div class="row">
             <label>Номер телефона и Оператор:</label>
             <div class="row-inline">
+                <!-- Встроен вызов detectOperator -->
                 <input type="text" id="client_phone" placeholder="+79008889911" style="flex: 1; min-width: 140px;" oninput="removeError(this); detectOperator(this);">
                 <select id="operator_select" onchange="toggleOperatorInput();" style="width: 110px;">
                     <option value="МТС">МТС</option>
@@ -335,17 +336,17 @@
         checkDocs();
     }
 
-    // ИНТЕГРАЦИЯ API DADATA ДЛЯ ОПРЕДЕЛЕНИЯ ОПЕРАТОРА
+    // Рабочая интеграция Voxlink через лучший публичный прокси corsproxy.io
     async function detectOperator(inputEl) {
         let phone = inputEl.value.replace(/\D/g, ''); 
-        
         if (phone.length < 11) return; 
 
         clearTimeout(operatorTimeout);
         
         operatorTimeout = setTimeout(async () => {
-            const token = "c1df441ab44a595d9d094aeaa984f01798eceb88"; 
-            const secret = "05a1159eaaf761299ab112ecb24d12a74ed301de"; 
+            const targetUrl = `http://num.voxlink.ru/get/?num=${phone}`;
+            // corsproxy.io — самый стабильный и быстрый бесплатный прокси для этих задач
+            const apiUrl = `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`;
             
             const customOpInput = document.getElementById('operator_custom');
             const selectOp = document.getElementById('operator_select');
@@ -355,28 +356,29 @@
                 customOpInput.style.display = 'block';
                 customOpInput.value = 'Определяем...';
 
-                const response = await fetch("https://cleaner.dadata.ru/api/v1/clean/phone", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": "Token " + token,
-                        "X-Secret": secret
-                    },
-                    body: JSON.stringify([ phone ])
-                });
+                // Защита от зависаний (принудительный обрыв через 5 сек)
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+                const response = await fetch(apiUrl, { signal: controller.signal });
+                clearTimeout(timeoutId);
 
                 if (!response.ok) throw new Error('Ошибка сети');
                 
                 const data = await response.json();
 
-                if (data && data[0] && data[0].provider) {
-                    customOpInput.value = data[0].provider;
+                if (data.operator) {
+                    if (data.old_operator) {
+                        customOpInput.value = `${data.old_operator} -> ${data.operator}`;
+                    } else {
+                        customOpInput.value = data.operator;
+                    }
                     removeError(customOpInput);
                 } else {
                     customOpInput.value = 'Не определен';
                 }
             } catch (error) {
-                console.error("Ошибка API DaData:", error);
+                console.error("Ошибка API:", error);
                 customOpInput.value = '';
                 customOpInput.placeholder = 'Сбой API, введи вручную';
             }
