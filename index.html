@@ -5,14 +5,9 @@
     <title>Корректное заполнение отчёта By.Aiven</title>
     <style>
         :root {
-            --bg-color: #0a0a0a;
-            --panel-bg: rgba(20, 20, 20, 0.95);
-            --text-color: #e0e0e0;
-            --accent-color: #00e5ff;
-            --border-color: #333;
-            --input-bg: #161616;
-            --input-text: #fff;
-            --label-color: #a0a0a0;
+            --bg-color: #0a0a0a; --panel-bg: rgba(20, 20, 20, 0.95); --text-color: #e0e0e0;
+            --accent-color: #00e5ff; --border-color: #333; --input-bg: #161616;
+            --input-text: #fff; --label-color: #a0a0a0;
         }
 
         body {
@@ -27,28 +22,15 @@
         canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; }
 
         body.theme-crm {
-            --bg-color: #10161d;
-            --panel-bg: #1c2430;
-            --text-color: #ffffff;
-            --accent-color: #3ad385;
-            --border-color: #2a3340;
-            --input-bg: #0b1016;
-            --input-text: #ffffff;
-            --label-color: #7b8a9c;
+            --bg-color: #10161d; --panel-bg: #1c2430; --text-color: #ffffff;
+            --accent-color: #3ad385; --border-color: #2a3340; --input-bg: #0b1016;
+            --input-text: #ffffff; --label-color: #7b8a9c;
         }
         
-        body.theme-money {
-            --bg-color: #050505; --panel-bg: rgba(15, 15, 15, 0.98); --text-color: #ffffff; --accent-color: #00ffcc; --border-color: #00ffcc; --input-bg: #101010; --input-text: #ffffff;
-        }
-        body.theme-sakura {
-            --bg-color: #fff0f2; --panel-bg: rgba(255, 235, 238, 0.96); --text-color: #4a282c; --accent-color: #ff527b; --border-color: #ffb3c1; --input-bg: #ffffff; --input-text: #4a282c;
-        }
-        body.theme-dark {
-            --bg-color: #121212; --panel-bg: #1e1e1e; --text-color: #e0e0e0; --accent-color: #bb86fc; --border-color: #444; --input-bg: #2d2d2d; --input-text: #fff;
-        }
-        body.theme-light {
-            --bg-color: #f5f5f5; --panel-bg: #ffffff; --text-color: #333333; --accent-color: #1976d2; --border-color: #cccccc; --input-bg: #f0f0f0; --input-text: #333333;
-        }
+        body.theme-money { --bg-color: #050505; --panel-bg: rgba(15, 15, 15, 0.98); --text-color: #ffffff; --accent-color: #00ffcc; --border-color: #00ffcc; --input-bg: #101010; --input-text: #ffffff; }
+        body.theme-sakura { --bg-color: #fff0f2; --panel-bg: rgba(255, 235, 238, 0.96); --text-color: #4a282c; --accent-color: #ff527b; --border-color: #ffb3c1; --input-bg: #ffffff; --input-text: #4a282c; }
+        body.theme-dark { --bg-color: #121212; --panel-bg: #1e1e1e; --text-color: #e0e0e0; --accent-color: #bb86fc; --border-color: #444; --input-bg: #2d2d2d; --input-text: #fff; }
+        body.theme-light { --bg-color: #f5f5f5; --panel-bg: #ffffff; --text-color: #333333; --accent-color: #1976d2; --border-color: #cccccc; --input-bg: #f0f0f0; --input-text: #333333; }
 
         .main-panel {
             width: 100%; max-width: 440px; background: var(--panel-bg);
@@ -59,53 +41,32 @@
 
         .title-spacing { height: 5px; }
         
-        h3 { 
-            margin: 5px 0 2px 0; color: #ffb300; font-size: 13px; text-transform: uppercase; 
-            font-weight: 700; letter-spacing: 0.5px;
-        }
+        h3 { margin: 5px 0 2px 0; color: #ffb300; font-size: 13px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
         body.theme-crm h3 { color: #ffffff; font-size: 13px; letter-spacing: 0.5px; margin-top: 5px; }
-        body.theme-crm label { 
-            font-size: 10px; color: var(--label-color); text-transform: uppercase; 
-            letter-spacing: 1px; font-weight: 700; margin-bottom: -2px;
-        }
+        body.theme-crm label { font-size: 10px; color: var(--label-color); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: -2px; }
         body.theme-sakura h3 { color: #c2185b; }
         
         .row { display: flex; flex-direction: column; gap: 6px; }
         .row-inline { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-        
         label { font-size: 12px; color: var(--label-color, var(--text-color)); opacity: 0.9; font-weight: 600; }
         
         input[type="text"], select, textarea {
             background: var(--input-bg); border: 1px solid var(--border-color); color: var(--input-text);
-            padding: 10px 12px; border-radius: 8px; font-size: 14px; transition: all 0.2s; box-sizing: border-box;
-            width: 100%;
+            padding: 10px 12px; border-radius: 8px; font-size: 14px; transition: all 0.2s; box-sizing: border-box; width: 100%;
         }
-        input[type="text"]:focus, select:focus, textarea:focus { 
-            border-color: var(--accent-color); outline: none; 
-            box-shadow: 0 0 0 1px var(--accent-color); 
-        }
+        input[type="text"]:focus, select:focus, textarea:focus { border-color: var(--accent-color); outline: none; box-shadow: 0 0 0 1px var(--accent-color); }
         textarea { resize: vertical; min-height: 55px; font-family: inherit; }
 
         .theme-selector { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 5px; background: rgba(0,0,0,0.15); padding: 5px; border-radius: 8px; }
-        .theme-btn { 
-            flex: 1; min-width: 65px; padding: 6px; font-size: 10px; font-weight: bold; 
-            border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; 
-            background: var(--input-bg); color: var(--input-text); text-align: center; transition: 0.2s;
-        }
+        .theme-btn { flex: 1; min-width: 65px; padding: 6px; font-size: 10px; font-weight: bold; border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; background: var(--input-bg); color: var(--input-text); text-align: center; transition: 0.2s; }
         .theme-btn:hover { background: var(--accent-color); color: #000; border-color: var(--accent-color); }
 
-        .dmf-btn {
-            flex: 1; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--input-text);
-            padding: 8px; font-weight: bold; border-radius: 8px; cursor: pointer; font-size: 14px; transition: 0.2s;
-        }
+        .dmf-btn { flex: 1; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--input-text); padding: 8px; font-weight: bold; border-radius: 8px; cursor: pointer; font-size: 14px; transition: 0.2s; }
         .dmf-btn.active.plus { background: #1b5e20; border-color: #4caf50; color: #fff; }
         .dmf-btn.active.minus { background: #b71c1c; border-color: #f44336; color: #fff; }
         body.theme-crm .dmf-btn.active.plus { background: rgba(58, 211, 133, 0.15); border-color: var(--accent-color); color: var(--accent-color); }
 
-        .fast-btn {
-            background: var(--input-bg); border: 1px solid var(--border-color); color: var(--input-text);
-            padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 12px; transition: 0.2s;
-        }
+        .fast-btn { background: var(--input-bg); border: 1px solid var(--border-color); color: var(--input-text); padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 12px; transition: 0.2s; }
         .fast-btn:hover { border-color: var(--accent-color); color: var(--accent-color); }
         
         .toggle-group { display: flex; gap: 6px; background: var(--input-bg); padding: 4px; border-radius: 8px; border: 1px solid var(--border-color); width: 100%; box-sizing: border-box; }
@@ -114,43 +75,25 @@
         .toggle-btn.active.bad { background: #c62828; color: #fff; }
         body.theme-crm .toggle-btn.active.good { background: rgba(58, 211, 133, 0.15); color: var(--accent-color); }
 
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            50% { transform: translateX(5px); }
-            75% { transform: translateX(-5px); }
-        }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 50% { transform: translateX(5px); } 75% { transform: translateX(-5px); } }
         .shake { animation: shake 0.4s ease-in-out; }
         .error-border { border-color: #ff5252 !important; background: rgba(255, 82, 82, 0.05) !important; }
 
-        #toast-container {
-            position: fixed; bottom: 20px; right: 20px; z-index: 10000;
-            display: flex; flex-direction: column; gap: 10px; pointer-events: none;
-        }
-        .toast {
-            background: #ff5252; color: #fff; padding: 12px 20px; border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4); font-size: 13px; font-weight: bold;
-            opacity: 0; transform: translateX(50px); transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
+        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 10000; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+        .toast { background: #ff5252; color: #fff; padding: 12px 20px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.4); font-size: 13px; font-weight: bold; opacity: 0; transform: translateX(50px); transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
         .toast.show { opacity: 1; transform: translateX(0); }
 
         .action-btn { width: 100%; border: none; padding: 12px; border-radius: 8px; font-size: 13px; font-weight: bold; cursor: pointer; transition: 0.2s; color: white; margin-top: 5px;}
         .btn-full { background: #0d47a1; } .btn-full:hover { background: #1565c0; }
-        body.theme-crm .btn-full { 
-            background: var(--accent-color); color: #000; font-size: 14px; 
-            box-shadow: 0 4px 15px rgba(58, 211, 133, 0.15); 
-        }
+        body.theme-crm .btn-full { background: var(--accent-color); color: #000; font-size: 14px; box-shadow: 0 4px 15px rgba(58, 211, 133, 0.15); }
         body.theme-crm .btn-full:hover { background: #32ba75; }
         
         .btn-clear { background: #37474f; margin-top: 2px; } .btn-clear:hover { background: #455a64; }
         body.theme-crm .btn-clear { background: transparent; border: 1px solid var(--border-color); color: #ff5252; }
         
-        .btn-small-copy {
-            width: 100%; padding: 8px; font-size: 12px; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; color: white; transition: 0.15s; margin-top: 4px;
-        }
+        .btn-small-copy { width: 100%; padding: 8px; font-size: 12px; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; color: white; transition: 0.15s; margin-top: 4px; }
         .btn-small-copy.basis { background: #2e7d32; } .btn-small-copy.basis:hover { background: #388e3c; }
         .btn-small-copy.part2 { background: #ef6c00; } .btn-small-copy.part2:hover { background: #f57c00; }
-        
         body.theme-crm .btn-small-copy.basis { background: #1e3a2a; color: #3ad385; border: 1px solid #2a4a35; }
         body.theme-crm .btn-small-copy.part2 { background: #3a2510; color: #ff9800; border: 1px solid #4a3015; }
 
@@ -165,28 +108,15 @@
         .doc-row span.doc-label { font-size: 13px; width: 65px; font-weight: bold; color: var(--text-color); }
         .doc-input-wrapper { position: relative; flex: 1; display: flex; align-items: center; }
         .doc-input-wrapper input { padding-right: 30px; }
-        .doc-status {
-            position: absolute; right: 10px; font-size: 16px; color: var(--accent-color);
-            font-weight: bold; opacity: 0; transition: 0.2s; pointer-events: none;
-        }
+        .doc-status { position: absolute; right: 10px; font-size: 16px; color: var(--accent-color); font-weight: bold; opacity: 0; transition: 0.2s; pointer-events: none; }
         .doc-status.valid { opacity: 1; transform: scale(1.1); }
 
-        #success-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            display: flex; align-items: center; justify-content: center;
-            z-index: 9999; pointer-events: none; opacity: 0;
-            transition: opacity 0.4s ease-out;
-        }
+        #success-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; z-index: 9999; pointer-events: none; opacity: 0; transition: opacity 0.4s ease-out; }
         #success-overlay.show { opacity: 1; }
-        .success-checkmark {
-            font-size: 120px; color: var(--accent-color); text-shadow: 0 0 30px rgba(58,211,133,0.4);
-            transform: scale(0.5); transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
+        .success-checkmark { font-size: 120px; color: var(--accent-color); text-shadow: 0 0 30px rgba(58,211,133,0.4); transform: scale(0.5); transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         #success-overlay.show .success-checkmark { transform: scale(1); }
 
-        .footer-credits {
-            text-align: center; font-size: 11px; margin-top: 10px; opacity: 0.5; color: var(--text-color);
-        }
+        .footer-credits { text-align: center; font-size: 11px; margin-top: 10px; opacity: 0.5; color: var(--text-color); }
         .footer-credits a { color: var(--accent-color); text-decoration: none; font-weight: bold; }
     </style>
 </head>
@@ -238,7 +168,6 @@
         <div class="row">
             <label>Номер телефона и Оператор:</label>
             <div class="row-inline">
-                <!-- Встроен вызов detectOperator -->
                 <input type="text" id="client_phone" placeholder="+79008889911" style="flex: 1; min-width: 140px;" oninput="removeError(this); detectOperator(this);">
                 <select id="operator_select" onchange="toggleOperatorInput();" style="width: 110px;">
                     <option value="МТС">МТС</option>
@@ -336,17 +265,18 @@
         checkDocs();
     }
 
-    // Рабочая интеграция Voxlink через лучший публичный прокси corsproxy.io
+    // ИНТЕГРАЦИЯ ЧЕРЕЗ GOOGLE SCRIPTS (ОБХОД БЛОКИРОВОК GITHUB PAGES)
     async function detectOperator(inputEl) {
         let phone = inputEl.value.replace(/\D/g, ''); 
+        
         if (phone.length < 11) return; 
 
         clearTimeout(operatorTimeout);
         
         operatorTimeout = setTimeout(async () => {
-            const targetUrl = `http://num.voxlink.ru/get/?num=${phone}`;
-            // corsproxy.io — самый стабильный и быстрый бесплатный прокси для этих задач
-            const apiUrl = `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`;
+            
+            // ВСТАВЛЕН ТВОЙ GOOGLE SCRIPT WEB APP URL
+            const scriptUrl = "https://script.google.com/macros/s/AKfycbxLtBza1VmgQIJZmqACz4ZQRya5cTKfawfkxIjDhlMu4yGUHv0km4eDZIjHcqzFJI56mQ/exec"; 
             
             const customOpInput = document.getElementById('operator_custom');
             const selectOp = document.getElementById('operator_select');
@@ -356,31 +286,28 @@
                 customOpInput.style.display = 'block';
                 customOpInput.value = 'Определяем...';
 
-                // Защита от зависаний (принудительный обрыв через 5 сек)
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 5000);
-
-                const response = await fetch(apiUrl, { signal: controller.signal });
-                clearTimeout(timeoutId);
-
-                if (!response.ok) throw new Error('Ошибка сети');
+                const response = await fetch(`${scriptUrl}?phone=${phone}`);
+                if (!response.ok) throw new Error('Ошибка связи с сервером');
                 
                 const data = await response.json();
 
-                if (data.operator) {
-                    if (data.old_operator) {
-                        customOpInput.value = `${data.old_operator} -> ${data.operator}`;
-                    } else {
-                        customOpInput.value = data.operator;
-                    }
+                if (data && data[0] && data[0].provider) {
+                    let op = data[0].provider;
+                    // Сокращаем длинные названия DaData для красоты
+                    if (op.includes('Т2 Мобайл') || op.includes('Теле2')) op = 'Теле2';
+                    else if (op.includes('МТС')) op = 'МТС';
+                    else if (op.includes('МегаФон')) op = 'Мегафон';
+                    else if (op.includes('Вымпел-Коммуникации')) op = 'Билайн';
+
+                    customOpInput.value = op;
                     removeError(customOpInput);
                 } else {
                     customOpInput.value = 'Не определен';
                 }
             } catch (error) {
-                console.error("Ошибка API:", error);
+                console.error("Ошибка API DaData через Google:", error);
                 customOpInput.value = '';
-                customOpInput.placeholder = 'Сбой API, введи вручную';
+                customOpInput.placeholder = 'Сбой сети, введи вручную';
             }
         }, 800);
     }
@@ -392,10 +319,7 @@
         toast.innerText = msg;
         container.appendChild(toast);
         setTimeout(() => toast.classList.add('show'), 10);
-        setTimeout(() => {
-            toast.classList.remove('show');
-            setTimeout(() => toast.remove(), 300);
-        }, 3000);
+        setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 300); }, 3000);
     }
 
     function removeError(el) {
@@ -471,7 +395,6 @@
     function copyReport(type) {
         let errors = [];
         
-        // Поля Основы
         const namePart = document.getElementById('username_custom').value.trim();
         const fioDate = document.getElementById('fio_date').value.trim();
         const dateRegex = /\b\d{2}\.\d{2}\.\d{4}$/;
@@ -479,7 +402,6 @@
         const opSelect = document.getElementById('operator_select').value;
         const opCustom = document.getElementById('operator_custom').value.trim();
         
-        // Поля Доп. Инфо
         const clientCode = document.getElementById('client_code').value.trim();
         const codeOrg = document.getElementById('code_org').value.trim();
         let snils = document.getElementById('doc_snils').value.replace(/\D/g, '');
@@ -538,7 +460,6 @@
             return;
         }
 
-        // Сборка отчета
         const finalNick = namePart ? "Холодник " + namePart : "";
         const finalOperator = opSelect === 'custom' ? opCustom : opSelect;
         const finalPhoneLine = phone + (finalOperator ? " " + finalOperator : "");
