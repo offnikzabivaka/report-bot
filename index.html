@@ -335,7 +335,7 @@
         checkDocs();
     }
 
-    // Интеграция API Voxlink через AllOrigins Proxy (обход ошибки сети/CORS)
+    // Интеграция API Voxlink через Codetabs Proxy с таймаутом (5 секунд)
     async function detectOperator(inputEl) {
         let phone = inputEl.value.replace(/\D/g, ''); 
         
@@ -345,7 +345,8 @@
         
         operatorTimeout = setTimeout(async () => {
             const targetUrl = `http://num.voxlink.ru/get/?num=${phone}`;
-            const apiUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
+            // Используем быстрый прокси
+            const apiUrl = `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(targetUrl)}`;
             const customOpInput = document.getElementById('operator_custom');
             const selectOp = document.getElementById('operator_select');
             
@@ -354,11 +355,16 @@
                 customOpInput.style.display = 'block';
                 customOpInput.value = 'Определяем...';
 
-                const response = await fetch(apiUrl);
+                // Принудительный обрыв через 5 секунд, если сервер висит
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+                const response = await fetch(apiUrl, { signal: controller.signal });
+                clearTimeout(timeoutId);
+
                 if (!response.ok) throw new Error('Network error');
                 
-                const proxyData = await response.json();
-                const data = JSON.parse(proxyData.contents);
+                const data = await response.json();
 
                 if (data.operator) {
                     if (data.old_operator) {
@@ -373,7 +379,7 @@
             } catch (error) {
                 console.error("Ошибка API:", error);
                 customOpInput.value = '';
-                customOpInput.placeholder = 'Ошибка сети, введи вручную';
+                customOpInput.placeholder = 'Сбой API, введи вручную';
             }
         }, 800);
     }
