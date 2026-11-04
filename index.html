@@ -145,15 +145,6 @@
         .btn-clear { background: #37474f; margin-top: 2px; } .btn-clear:hover { background: #455a64; }
         body.theme-crm .btn-clear { background: transparent; border: 1px solid var(--border-color); color: #ff5252; }
         
-        .btn-small-copy {
-            width: 100%; padding: 8px; font-size: 12px; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; color: white; transition: 0.15s; margin-top: 4px;
-        }
-        .btn-small-copy.basis { background: #2e7d32; } .btn-small-copy.basis:hover { background: #388e3c; }
-        .btn-small-copy.part2 { background: #ef6c00; } .btn-small-copy.part2:hover { background: #f57c00; }
-        
-        body.theme-crm .btn-small-copy.basis { background: #1e3a2a; color: #3ad385; border: 1px solid #2a4a35; }
-        body.theme-crm .btn-small-copy.part2 { background: #3a2510; color: #ff9800; border: 1px solid #4a3015; }
-
         .divider { border-top: 1px dashed var(--border-color); margin: 6px 0; opacity: 0.5; }
         
         .nick-input-container { display: flex; align-items: center; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; padding-left: 12px; transition: 0.2s; }
@@ -193,10 +184,7 @@
 <body class="theme-crm">
 
     <div id="toast-container"></div>
-
-    <div id="success-overlay">
-        <div class="success-checkmark">✔</div>
-    </div>
+    <div id="success-overlay"><div class="success-checkmark">✔</div></div>
 
     <div id="bg-container">
         <div class="bg-gif" id="money-bg"></div>
@@ -223,7 +211,6 @@
         </div>
 
         <div class="divider"></div>
-        <h3>Часть 1: Основа</h3>
 
         <div class="row">
             <label>Кассетка:</label>
@@ -241,7 +228,7 @@
         <div class="row">
             <label>Номер телефона и Оператор:</label>
             <div class="row-inline">
-                <input type="text" id="client_phone" placeholder="+79008889911" style="flex: 1; min-width: 140px;" oninput="removeError(this);">
+                <input type="text" id="client_phone" placeholder="+79008889911" style="flex: 1; min-width: 140px;" oninput="removeError(this); detectOperator(this);">
                 <select id="operator_select" onchange="toggleOperatorInput();" style="width: 110px;">
                     <option value="МТС">МТС</option>
                     <option value="Мегафон">Мегафон</option>
@@ -274,7 +261,6 @@
                     <span id="status_snils" class="doc-status">✔</span>
                 </div>
             </div>
-
             <div class="doc-row">
                 <span class="doc-label">Паспорт:</span>
                 <div class="doc-input-wrapper">
@@ -282,7 +268,6 @@
                     <span id="status_passport" class="doc-status">✔</span>
                 </div>
             </div>
-
             <div class="doc-row">
                 <span class="doc-label">ИНН:</span>
                 <div class="doc-input-wrapper">
@@ -300,10 +285,7 @@
             </div>
         </div>
 
-        <button class="btn-small-copy basis" onclick="copyReport('basis')">📋 СКОПИРОВАТЬ ОСНОВУ</button>
-
         <div class="divider"></div>
-        <h3>Часть 2: Доп. Инфо</h3>
 
         <div class="row">
             <label>Почта:</label>
@@ -318,10 +300,7 @@
             <textarea id="description" placeholder="Краткий контекст по клиенту" oninput="removeError(this);"></textarea>
         </div>
 
-        <button class="btn-small-copy part2" onclick="copyReport('part2')">🔸 СКОПИРОВАТЬ ВТОРУЮ ЧАСТЬ</button>
-
-        <div class="divider"></div>
-        <button class="action-btn btn-full" onclick="copyReport('full')">🚀 СКОПИРОВАТЬ ПОЛНЫЙ ОТЧЁТ</button>
+        <button class="action-btn btn-full" onclick="copyReport()">🚀 СКОПИРОВАТЬ ВЕСЬ ОТЧЁТ</button>
         <button class="action-btn btn-clear" onclick="clearForm()">🧹 ОЧИСТИТЬ ФОРМУ</button>
 
         <div class="footer-credits">
@@ -333,13 +312,56 @@
     let dmfSelection = '';
     let isRussianGood = true;
     let activeAnimation = null;
+    let operatorTimeout = null; // Таймер для запросов к API
 
     window.onload = function() {
-        if(localStorage.getItem('saved_only_name')) {
-            document.getElementById('username_custom').value = localStorage.getItem('saved_only_name');
-        }
+        if(localStorage.getItem('saved_only_name')) document.getElementById('username_custom').value = localStorage.getItem('saved_only_name');
         changeTheme(localStorage.getItem('saved_theme') || 'crm');
         checkDocs();
+    }
+
+    // ИНТЕГРАЦИЯ API VOXLINK ДЛЯ ОПРЕДЕЛЕНИЯ ОПЕРАТОРА
+    async function detectOperator(inputEl) {
+        let phone = inputEl.value.replace(/\D/g, ''); 
+        
+        // Российские номера с кодом занимают 11 цифр (7900...)
+        if (phone.length < 11) return; 
+
+        clearTimeout(operatorTimeout);
+        
+        // Ждем 800мс после окончания ввода, чтобы не спамить API
+        operatorTimeout = setTimeout(async () => {
+            const apiUrl = `https://num.voxlink.ru/get/?num=${phone}`;
+            const customOpInput = document.getElementById('operator_custom');
+            const selectOp = document.getElementById('operator_select');
+            
+            try {
+                selectOp.value = 'custom';
+                customOpInput.style.display = 'block';
+                customOpInput.value = 'Определяем...';
+
+                const response = await fetch(apiUrl);
+                if (!response.ok) throw new Error('Network error');
+                
+                const data = await response.json();
+
+                if (data.operator) {
+                    if (data.old_operator) {
+                        customOpInput.value = `${data.old_operator} -> ${data.operator}`;
+                    } else {
+                        customOpInput.value = data.operator;
+                    }
+                    removeError(customOpInput);
+                } else {
+                    customOpInput.value = 'Не определен';
+                }
+            } catch (error) {
+                console.error("Ошибка API:", error);
+                // Если API лег, оставляем поле для ручного ввода
+                customOpInput.value = '';
+                customOpInput.placeholder = 'Ошибка сети, введи вручную';
+            }
+        }, 800);
     }
 
     function showToast(msg) {
@@ -364,9 +386,7 @@
         }
     }
 
-    function saveNick() { 
-        localStorage.setItem('saved_only_name', document.getElementById('username_custom').value); 
-    }
+    function saveNick() { localStorage.setItem('saved_only_name', document.getElementById('username_custom').value); }
 
     function processFIO() {
         const input = document.getElementById('fio_date');
@@ -404,11 +424,7 @@
         removeError(custom);
     }
 
-    function setOrg(name) { 
-        const orgInput = document.getElementById('code_org');
-        orgInput.value = name; 
-        removeError(orgInput);
-    }
+    function setOrg(name) { document.getElementById('code_org').value = name; removeError(document.getElementById('code_org')); }
 
     function checkDocs() {
         let snils = document.getElementById('doc_snils').value.replace(/\D/g, '');
@@ -423,10 +439,7 @@
 
     function clearForm() {
         setDmf('');
-        document.querySelectorAll('input[type="text"], textarea').forEach(el => {
-            el.value = '';
-            removeError(el);
-        });
+        document.querySelectorAll('input[type="text"], textarea').forEach(el => { el.value = ''; removeError(el); });
         document.getElementById('operator_select').value = 'МТС';
         document.getElementById('operator_custom').style.display = 'none';
         setLang(true);
@@ -434,7 +447,7 @@
         checkDocs();
     }
 
-    function copyReport(type) {
+    function copyReport() {
         let errors = [];
         const namePart = document.getElementById('username_custom').value.trim();
         const fioDate = document.getElementById('fio_date').value.trim();
@@ -444,50 +457,32 @@
         const opCustom = document.getElementById('operator_custom').value.trim();
         const clientCode = document.getElementById('client_code').value.trim();
         const codeOrg = document.getElementById('code_org').value.trim();
-        
-        let snils = document.getElementById('doc_snils').value.replace(/\D/g, '');
-        let pass = document.getElementById('doc_passport').value.replace(/\D/g, '');
-        let inn = document.getElementById('doc_inn').value.replace(/\D/g, '');
-
-        // Валидация Основы
-        if (type === 'basis' || type === 'full') {
-            if (!namePart) errors.push({id: 'username_custom', msg: 'Укажи свой ник!'});
-            if (!dmfSelection) errors.push({id: 'dmf-plus', msg: 'Выбери кассетку (+ или -)'});
-            if (!dateRegex.test(fioDate) || fioDate.replace(dateRegex, '').trim().split(/\s+/).filter(Boolean).length < 3) errors.push({id: 'fio_date', msg: 'ФИО: нужно 3 слова + дата (ДД.ММ.ГГГГ)'});
-            if (!phone.startsWith('+') || phone.length < 11) errors.push({id: 'client_phone', msg: 'Телефон: от 11 цифр и с +'});
-            if (opSelect === 'custom' && !opCustom) errors.push({id: 'operator_custom', msg: 'Укажи оператора вручную'});
-            if (!clientCode) errors.push({id: 'client_code', msg: 'Код пуст'});
-            if (!codeOrg) errors.push({id: 'code_org', msg: 'Организация пуста'});
-
-            let hasValidDoc = false;
-            let docLines = [];
-            if (snils) {
-                if (snils.length === 11) { hasValidDoc = true; docLines.push(`СНИЛС ${snils}`); }
-                else errors.push({id: 'doc_snils', msg: 'СНИЛС должен содержать 11 цифр'});
-            }
-            if (pass) {
-                if (pass.length === 10) { hasValidDoc = true; docLines.push(`Паспорт ${pass}`); }
-                else errors.push({id: 'doc_passport', msg: 'Паспорт должен содержать 10 цифр'});
-            }
-            if (inn) {
-                if (inn.length === 12) { hasValidDoc = true; docLines.push(`ИНН ${inn}`); }
-                else errors.push({id: 'doc_inn', msg: 'ИНН должен содержать 12 цифр'});
-            }
-            if (!hasValidDoc && snils.length === 0 && pass.length === 0 && inn.length === 0) {
-                errors.push({id: 'doc_snils', msg: 'Укажи хотя бы один документ правильно!'});
-            }
-        }
-
         const email = document.getElementById('email').value.trim();
         const myPhone = document.getElementById('my_phone').value.trim();
         const desc = document.getElementById('description').value.trim();
 
-        // Валидация Доп Инфо
-        if (type === 'part2' || type === 'full') {
-            if (!email) errors.push({id: 'email', msg: 'Почта пуста'});
-            if (!/^\+?\d{10,12}\s+\S+/.test(myPhone)) errors.push({id: 'my_phone', msg: 'Твой номер: нужен формат "+7... детали"'});
-            if (!desc) errors.push({id: 'description', msg: 'Заполни описание'});
-        }
+        let snils = document.getElementById('doc_snils').value.replace(/\D/g, '');
+        let pass = document.getElementById('doc_passport').value.replace(/\D/g, '');
+        let inn = document.getElementById('doc_inn').value.replace(/\D/g, '');
+
+        if (!namePart) errors.push({id: 'username_custom', msg: 'Укажи свой ник!'});
+        if (!dmfSelection) errors.push({id: 'dmf-plus', msg: 'Выбери кассетку (+ или -)'});
+        if (!dateRegex.test(fioDate) || fioDate.replace(dateRegex, '').trim().split(/\s+/).filter(Boolean).length < 3) errors.push({id: 'fio_date', msg: 'ФИО: нужно 3 слова + дата (ДД.ММ.ГГГГ)'});
+        if (!phone.startsWith('+') || phone.length < 11) errors.push({id: 'client_phone', msg: 'Телефон: от 11 цифр и с +'});
+        if (opSelect === 'custom' && !opCustom) errors.push({id: 'operator_custom', msg: 'Укажи или дождись оператора'});
+        if (!clientCode) errors.push({id: 'client_code', msg: 'Код пуст'});
+        if (!codeOrg) errors.push({id: 'code_org', msg: 'Организация пуста'});
+
+        let hasValidDoc = false;
+        let docLines = [];
+        if (snils) { if (snils.length === 11) { hasValidDoc = true; docLines.push(`СНИЛС ${snils}`); } else errors.push({id: 'doc_snils', msg: 'СНИЛС должен содержать 11 цифр'}); }
+        if (pass) { if (pass.length === 10) { hasValidDoc = true; docLines.push(`Паспорт ${pass}`); } else errors.push({id: 'doc_passport', msg: 'Паспорт должен содержать 10 цифр'}); }
+        if (inn) { if (inn.length === 12) { hasValidDoc = true; docLines.push(`ИНН ${inn}`); } else errors.push({id: 'doc_inn', msg: 'ИНН должен содержать 12 цифр'}); }
+        if (!hasValidDoc && snils.length === 0 && pass.length === 0 && inn.length === 0) errors.push({id: 'doc_snils', msg: 'Укажи хотя бы один документ правильно!'});
+
+        if (!email) errors.push({id: 'email', msg: 'Почта пуста'});
+        if (!/^\+?\d{10,12}\s+\S+/.test(myPhone)) errors.push({id: 'my_phone', msg: 'Твой номер: нужен формат "+7... детали"'});
+        if (!desc) errors.push({id: 'description', msg: 'Заполни описание'});
 
         if (errors.length > 0) {
             showToast("❌ " + errors[0].msg);
@@ -516,37 +511,22 @@
         const finalNick = namePart ? "Холодник " + namePart : "";
         const finalOperator = opSelect === 'custom' ? opCustom : opSelect;
         const finalPhoneLine = phone + (finalOperator ? " " + finalOperator : "");
-        
-        let docLines = [];
-        if (snils.length === 11) docLines.push(`СНИЛС ${snils}`);
-        if (pass.length === 10) docLines.push(`Паспорт ${pass}`);
-        if (inn.length === 12) docLines.push(`ИНН ${inn}`);
         const finalDocsStr = docLines.length > 0 ? docLines.join('\n') : 'Документ ...';
 
-        const part1 = `${finalNick}\nДМФ сип кассетка ${dmfSelection}\nФИО: ${fioDate}\nНомер телефона: ${finalPhoneLine}\nКод который он дал ${clientCode} ${codeOrg}\n${finalDocsStr}\nНа русском : ${isRussianGood ? 'хорошо' : 'плохо'}`;
-        const part2 = `Почта: ${email}\nМой номер: ${myPhone}\nОписание: ${desc}`;
-
-        let finalReport = '';
-        if (type === 'basis') finalReport = part1;
-        else if (type === 'part2') finalReport = part2;
-        else finalReport = part1 + '\n' + part2;
+        const finalReport = `${finalNick}\nДМФ сип кассетка ${dmfSelection}\nФИО: ${fioDate}\nНомер телефона: ${finalPhoneLine}\nКод который он дал ${clientCode} ${codeOrg}\n${finalDocsStr}\nНа русском : ${isRussianGood ? 'хорошо' : 'плохо'}\nПочта: ${email}\nМой номер: ${myPhone}\nОписание: ${desc}`;
 
         navigator.clipboard.writeText(finalReport).then(() => {
             const overlay = document.getElementById('success-overlay');
             overlay.className = 'show';
-            setTimeout(() => {
-                overlay.className = '';
-            }, 600);
+            setTimeout(() => { overlay.className = ''; }, 600);
         });
     }
 
     function changeTheme(themeName) {
         document.body.className = 'theme-' + themeName;
         localStorage.setItem('saved_theme', themeName);
-        
         document.getElementById('money-bg').style.display = (themeName === 'money') ? 'block' : 'none';
         document.getElementById('canvas-sakura').style.display = (themeName === 'sakura') ? 'block' : 'none';
-
         if (activeAnimation) cancelAnimationFrame(activeAnimation);
         if (themeName === 'sakura') startSakura();
     }
@@ -556,41 +536,23 @@
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         const petals = [];
-        
         for (let i = 0; i < 35; i++) {
             petals.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height - canvas.height,
-                w: Math.random() * 6 + 6,
-                h: Math.random() * 4 + 4,
-                opacity: Math.random() * 0.4 + 0.5,
-                speedY: Math.random() * 0.8 + 0.8,
-                speedX: Math.random() * 1 - 0.3,
-                rotation: Math.random() * Math.PI,
-                rotationSpeed: Math.random() * 0.02 - 0.01
+                x: Math.random() * canvas.width, y: Math.random() * canvas.height - canvas.height,
+                w: Math.random() * 6 + 6, h: Math.random() * 4 + 4, opacity: Math.random() * 0.4 + 0.5,
+                speedY: Math.random() * 0.8 + 0.8, speedX: Math.random() * 1 - 0.3,
+                rotation: Math.random() * Math.PI, rotationSpeed: Math.random() * 0.02 - 0.01
             });
         }
-        
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             for (let i = 0; i < petals.length; i++) {
-                const p = petals[i];
-                ctx.save();
-                ctx.translate(p.x, p.y);
-                ctx.rotate(p.rotation);
-                ctx.fillStyle = `rgba(255, 174, 191, ${p.opacity})`;
-                ctx.beginPath();
-                ctx.ellipse(0, 0, p.w, p.h, 0, 0, 2 * Math.PI);
-                ctx.fill();
-                ctx.restore();
-                
-                p.y += p.speedY;
-                p.x += p.speedX + Math.sin(p.y / 30) * 0.3;
-                p.rotation += p.rotationSpeed;
-                
+                const p = petals[i]; ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rotation);
+                ctx.fillStyle = `rgba(255, 174, 191, ${p.opacity})`; ctx.beginPath();
+                ctx.ellipse(0, 0, p.w, p.h, 0, 0, 2 * Math.PI); ctx.fill(); ctx.restore();
+                p.y += p.speedY; p.x += p.speedX + Math.sin(p.y / 30) * 0.3; p.rotation += p.rotationSpeed;
                 if (p.y > canvas.height || p.x > canvas.width || p.x < -20) {
-                    petals[i].y = -10;
-                    petals[i].x = Math.random() * canvas.width;
+                    petals[i].y = -10; petals[i].x = Math.random() * canvas.width;
                 }
             }
             activeAnimation = requestAnimationFrame(draw);
