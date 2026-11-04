@@ -118,6 +118,11 @@
 
         .footer-credits { text-align: center; font-size: 11px; margin-top: 10px; opacity: 0.5; color: var(--text-color); }
         .footer-credits a { color: var(--accent-color); text-decoration: none; font-weight: bold; }
+
+        /* Стили для текстовой строки над оператором */
+        .operator-info-text { font-size: 11px; color: var(--accent-color); min-height: 15px; margin-bottom: -2px; font-weight: 600; letter-spacing: 0.5px;}
+        body.theme-sakura .operator-info-text { color: #c2185b; }
+        body.theme-light .operator-info-text { color: #1976d2; }
     </style>
 </head>
 <body class="theme-crm">
@@ -167,6 +172,8 @@
 
         <div class="row">
             <label>Номер телефона и Оператор:</label>
+            <div id="operator_info_text" class="operator-info-text"></div>
+            
             <div class="row-inline">
                 <input type="text" id="client_phone" placeholder="+79008889911" style="flex: 1; min-width: 140px;" oninput="removeError(this); detectOperator(this);">
                 <select id="operator_select" onchange="toggleOperatorInput();" style="width: 110px;">
@@ -265,49 +272,56 @@
         checkDocs();
     }
 
-    // ИНТЕГРАЦИЯ ЧЕРЕЗ GOOGLE SCRIPTS (ОБХОД БЛОКИРОВОК GITHUB PAGES)
     async function detectOperator(inputEl) {
         let phone = inputEl.value.replace(/\D/g, ''); 
+        const infoText = document.getElementById('operator_info_text');
         
-        if (phone.length < 11) return; 
+        if (phone.length < 11) {
+            infoText.innerHTML = '';
+            return; 
+        }
 
         clearTimeout(operatorTimeout);
         
         operatorTimeout = setTimeout(async () => {
-            
-            // ВСТАВЛЕН ТВОЙ GOOGLE SCRIPT WEB APP URL
             const scriptUrl = "https://script.google.com/macros/s/AKfycbxLtBza1VmgQIJZmqACz4ZQRya5cTKfawfkxIjDhlMu4yGUHv0km4eDZIjHcqzFJI56mQ/exec"; 
             
             const customOpInput = document.getElementById('operator_custom');
             const selectOp = document.getElementById('operator_select');
             
             try {
-                selectOp.value = 'custom';
-                customOpInput.style.display = 'block';
-                customOpInput.value = 'Определяем...';
-
+                infoText.innerHTML = '⏳ Определяем оператора и регион...';
+                
                 const response = await fetch(`${scriptUrl}?phone=${phone}`);
                 if (!response.ok) throw new Error('Ошибка связи с сервером');
                 
                 const data = await response.json();
 
-                if (data && data[0] && data[0].provider) {
-                    let op = data[0].provider;
-                    // Сокращаем длинные названия DaData для красоты
-                    if (op.includes('Т2 Мобайл') || op.includes('Теле2')) op = 'Теле2';
-                    else if (op.includes('МТС')) op = 'МТС';
-                    else if (op.includes('МегаФон')) op = 'Мегафон';
-                    else if (op.includes('Вымпел-Коммуникации')) op = 'Билайн';
+                if (data.operator) {
+                    selectOp.value = 'custom';
+                    customOpInput.style.display = 'block';
+                    
+                    let currentOp = data.operator;
+                    let region = data.region || 'Регион неизвестен';
+                    
+                    if (data.old_operator) {
+                        infoText.innerHTML = `📍 ${region} | 🔄 Перенесен: <b>${data.old_operator} ➔ ${currentOp}</b>`;
+                    } else {
+                        infoText.innerHTML = `📍 ${region} | ✅ Не перенесен (${currentOp})`;
+                    }
 
-                    customOpInput.value = op;
+                    customOpInput.value = currentOp;
                     removeError(customOpInput);
                 } else {
-                    customOpInput.value = 'Не определен';
+                    infoText.innerHTML = '❌ Номер не найден в базе';
+                    customOpInput.value = '';
                 }
             } catch (error) {
-                console.error("Ошибка API DaData через Google:", error);
-                customOpInput.value = '';
-                customOpInput.placeholder = 'Сбой сети, введи вручную';
+                console.error("Ошибка API через Google:", error);
+                infoText.innerHTML = '❌ Ошибка сети';
+                selectOp.value = 'custom';
+                customOpInput.style.display = 'block';
+                customOpInput.placeholder = 'Введи вручную';
             }
         }, 800);
     }
@@ -387,6 +401,7 @@
         document.querySelectorAll('input[type="text"], textarea').forEach(el => { el.value = ''; removeError(el); });
         document.getElementById('operator_select').value = 'МТС';
         document.getElementById('operator_custom').style.display = 'none';
+        document.getElementById('operator_info_text').innerHTML = ''; 
         setLang(true);
         if(localStorage.getItem('saved_only_name')) document.getElementById('username_custom').value = localStorage.getItem('saved_only_name');
         checkDocs();
@@ -411,7 +426,6 @@
         const myPhone = document.getElementById('my_phone').value.trim();
         const desc = document.getElementById('description').value.trim();
 
-        // Валидация Основы
         if (type === 'basis' || type === 'full') {
             if (!namePart) errors.push({id: 'username_custom', msg: 'Укажи свой ник!'});
             if (!dmfSelection) errors.push({id: 'dmf-plus', msg: 'Выбери кассетку (+ или -)'});
@@ -420,7 +434,6 @@
             if (opSelect === 'custom' && !opCustom) errors.push({id: 'operator_custom', msg: 'Укажи или дождись оператора'});
         }
 
-        // Валидация Доп Инфо
         if (type === 'part2' || type === 'full') {
             if (!clientCode) errors.push({id: 'client_code', msg: 'Код пуст'});
             if (!codeOrg) errors.push({id: 'code_org', msg: 'Организация пуста'});
