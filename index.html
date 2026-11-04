@@ -335,7 +335,7 @@
         checkDocs();
     }
 
-    // Интеграция API Voxlink через Codetabs Proxy с таймаутом (5 секунд)
+    // ИНТЕГРАЦИЯ API DADATA ДЛЯ ОПРЕДЕЛЕНИЯ ОПЕРАТОРА
     async function detectOperator(inputEl) {
         let phone = inputEl.value.replace(/\D/g, ''); 
         
@@ -344,9 +344,9 @@
         clearTimeout(operatorTimeout);
         
         operatorTimeout = setTimeout(async () => {
-            const targetUrl = `http://num.voxlink.ru/get/?num=${phone}`;
-            // Используем быстрый прокси
-            const apiUrl = `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(targetUrl)}`;
+            const token = "c1df441ab44a595d9d094aeaa984f01798eceb88"; 
+            const secret = "05a1159eaaf761299ab112ecb24d12a74ed301de"; 
+            
             const customOpInput = document.getElementById('operator_custom');
             const selectOp = document.getElementById('operator_select');
             
@@ -355,29 +355,28 @@
                 customOpInput.style.display = 'block';
                 customOpInput.value = 'Определяем...';
 
-                // Принудительный обрыв через 5 секунд, если сервер висит
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 5000);
+                const response = await fetch("https://cleaner.dadata.ru/api/v1/clean/phone", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Token " + token,
+                        "X-Secret": secret
+                    },
+                    body: JSON.stringify([ phone ])
+                });
 
-                const response = await fetch(apiUrl, { signal: controller.signal });
-                clearTimeout(timeoutId);
-
-                if (!response.ok) throw new Error('Network error');
+                if (!response.ok) throw new Error('Ошибка сети');
                 
                 const data = await response.json();
 
-                if (data.operator) {
-                    if (data.old_operator) {
-                        customOpInput.value = `${data.old_operator} -> ${data.operator}`;
-                    } else {
-                        customOpInput.value = data.operator;
-                    }
+                if (data && data[0] && data[0].provider) {
+                    customOpInput.value = data[0].provider;
                     removeError(customOpInput);
                 } else {
                     customOpInput.value = 'Не определен';
                 }
             } catch (error) {
-                console.error("Ошибка API:", error);
+                console.error("Ошибка API DaData:", error);
                 customOpInput.value = '';
                 customOpInput.placeholder = 'Сбой API, введи вручную';
             }
