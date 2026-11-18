@@ -50,11 +50,11 @@
         .row-inline { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
         label { font-size: 12px; color: var(--label-color, var(--text-color)); opacity: 0.9; font-weight: 600; }
         
-        input[type="text"], select, textarea {
+        input[type="text"], input[type="password"], select, textarea {
             background: var(--input-bg); border: 1px solid var(--border-color); color: var(--input-text);
             padding: 10px 12px; border-radius: 8px; font-size: 14px; transition: all 0.2s; box-sizing: border-box; width: 100%;
         }
-        input[type="text"]:focus, select:focus, textarea:focus { border-color: var(--accent-color); outline: none; box-shadow: 0 0 0 1px var(--accent-color); }
+        input[type="text"]:focus, input[type="password"]:focus, select:focus, textarea:focus { border-color: var(--accent-color); outline: none; box-shadow: 0 0 0 1px var(--accent-color); }
         textarea { resize: vertical; min-height: 55px; font-family: inherit; }
 
         .theme-selector { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 5px; background: rgba(0,0,0,0.15); padding: 5px; border-radius: 8px; }
@@ -119,13 +119,30 @@
         .footer-credits { text-align: center; font-size: 11px; margin-top: 10px; opacity: 0.5; color: var(--text-color); }
         .footer-credits a { color: var(--accent-color); text-decoration: none; font-weight: bold; }
 
-        /* Стили для текстовой строки над оператором */
         .operator-info-text { font-size: 11px; color: var(--accent-color); min-height: 15px; margin-bottom: -2px; font-weight: 600; letter-spacing: 0.5px;}
         body.theme-sakura .operator-info-text { color: #c2185b; }
         body.theme-light .operator-info-text { color: #1976d2; }
+
+        /* Навигация по вкладкам */
+        .tabs-header { display: flex; gap: 8px; margin-bottom: 5px; }
+        .tab-btn { flex: 1; padding: 10px; font-size: 12px; font-weight: bold; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-color); border-radius: 8px; cursor: pointer; transition: 0.2s; text-align: center; }
+        .tab-btn.active { background: var(--accent-color); color: #000; border-color: var(--accent-color); }
+        
+        .tab-content { display: none; flex-direction: column; gap: 14px; }
+        .tab-content.active { display: flex; }
     </style>
 </head>
 <body class="theme-crm">
+
+    <!-- ЭКРАН БЛОКИРОВКИ (ОДНОРАЗОВЫЕ ПАРОЛИ) -->
+    <div id="auth-overlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#0b0d12; z-index:99999; display:flex; align-items:center; justify-content:center; font-family:'Segoe UI', sans-serif;">
+      <div style="background:#161920; padding:30px; border-radius:14px; border:1px solid #2a2f3a; width:320px; text-align:center; box-shadow:0 10px 30px rgba(0,0,0,0.6);">
+        <h3 style="color:#ffffff; margin-top:0; margin-bottom:20px;">🔒 Доступ к панели</h3>
+        <input type="password" id="auth-pass-input" placeholder="Введите пароль..." onkeydown="if(event.key==='Enter') submitSiteLogin()" style="width:100%; box-sizing:border-box; padding:12px; background:#0f1116; border:1px solid #2e3543; color:#00e676; border-radius:8px; font-size:15px; text-align:center; font-weight:bold; outline:none; margin-bottom:15px;">
+        <button id="auth-btn" onclick="submitSiteLogin()" style="width:100%; background:#00e676; color:#000; border:none; padding:12px; border-radius:8px; font-weight:bold; cursor:pointer; font-size:14px;">Войти</button>
+        <div id="auth-error" style="color:#ff5252; font-size:13px; margin-top:12px; display:none;"></div>
+      </div>
+    </div>
 
     <div id="toast-container"></div>
     <div id="success-overlay"><div class="success-checkmark">✔</div></div>
@@ -144,116 +161,148 @@
             <button class="theme-btn" onclick="changeTheme('light')">☀️ Светлая</button>
         </div>
 
-        <div class="title-spacing"></div>
-        
-        <div class="row">
-            <label>Твой ник:</label>
-            <div class="nick-input-container" id="wrap_username">
-                <span class="nick-prefix">Холодник</span>
-                <input type="text" id="username_custom" placeholder="Александр" oninput="saveNick(); removeError(this);">
+        <!-- ПАНЕЛЬ АДМИНА (ВИДНА ТОЛЬКО ПО ПАРОЛЮ 332211) -->
+        <div id="admin-otp-panel" style="display:none; background:rgba(0,0,0,0.2); border:1px solid var(--accent-color); padding:12px; border-radius:10px; font-size:13px;">
+            <div style="color:var(--label-color); margin-bottom:4px;">Одноразовый пароль для сотрудника:</div>
+            <div style="display:flex; align-items:center; gap:8px;">
+                <span id="current-otp-display" style="font-size:18px; font-weight:bold; color:var(--accent-color); letter-spacing:1px;">------</span>
+                <button onclick="copyOtpCode()" style="background:var(--input-bg); color:var(--text-color); border:1px solid var(--border-color); padding:4px 8px; border-radius:6px; cursor:pointer; font-size:11px;">📋</button>
+                <button onclick="forceRegenOtp()" style="background:var(--input-bg); color:var(--text-color); border:1px solid var(--border-color); padding:4px 8px; border-radius:6px; cursor:pointer; font-size:11px;">🔄</button>
             </div>
         </div>
 
-        <div class="divider"></div>
-        <h3>Часть 1: Основа</h3>
-
-        <div class="row">
-            <label>Кассетка:</label>
-            <div class="row-inline">
-                <button class="dmf-btn" id="dmf-plus" onclick="setDmf('+'); removeError(this);">[ + ]</button>
-                <button class="dmf-btn" id="dmf-minus" onclick="setDmf('-'); removeError(this);">[ - ]</button>
-            </div>
+        <!-- ПЕРЕКЛЮЧАТЕЛЬ ВКЛАДОК -->
+        <div class="tabs-header">
+            <button class="tab-btn active" onclick="switchTab('report')">📝 Заполнение отчёта</button>
+            <button class="tab-btn" onclick="switchTab('address')">📍 Пробив Адреса</button>
         </div>
 
-        <div class="row">
-            <label>ФИО и Дата рождения:</label>
-            <input type="text" id="fio_date" placeholder="Петров Алексей Владимирович 12.08.1996" oninput="processFIO(); removeError(this);">
-        </div>
-
-        <div class="row">
-            <label>Номер телефона и Оператор:</label>
-            <div id="operator_info_text" class="operator-info-text"></div>
+        <!-- ВКЛАДКА 1: ОТЧЕТ -->
+        <div id="tab-report" class="tab-content active">
+            <div class="title-spacing"></div>
             
-            <div class="row-inline">
-                <input type="text" id="client_phone" placeholder="+79008889911" style="flex: 1; min-width: 140px;" oninput="removeError(this); detectOperator(this);">
-                <select id="operator_select" onchange="toggleOperatorInput();" style="width: 110px;">
-                    <option value="МТС">МТС</option>
-                    <option value="Мегафон">Мегафон</option>
-                    <option value="Билайн">Билайн</option>
-                    <option value="Теле2">Теле2</option>
-                    <option value="Йота">Йота</option>
-                    <option value="custom">Свой...</option>
-                </select>
-            </div>
-            <input type="text" id="operator_custom" placeholder="Введи оператора вручную" style="display:none; margin-top:4px;" oninput="removeError(this);">
-        </div>
-
-        <button class="btn-small-copy basis" onclick="copyReport('basis')">📋 СКОПИРОВАТЬ ОСНОВУ</button>
-
-        <div class="divider"></div>
-        <h3>Часть 2: Доп. Инфо</h3>
-
-        <div class="row">
-            <label>Код и Организация (Если не Лента/2Берега — пиши вручную):</label>
-            <div class="row-inline">
-                <input type="text" id="client_code" placeholder="4567" style="width: 65px;" oninput="removeError(this);">
-                <input type="text" id="code_org" placeholder="Название" style="flex:1; min-width: 100px;" oninput="removeError(this);">
-                <button class="fast-btn" onclick="setOrg('Лента')">Лента</button>
-                <button class="fast-btn" onclick="setOrg('2Берега')">2Берега</button>
-            </div>
-        </div>
-
-        <div class="row">
-            <label>Документы (введите номер, зеленая галочка подтвердит формат):</label>
-            <div class="doc-row">
-                <span class="doc-label">СНИЛС:</span>
-                <div class="doc-input-wrapper">
-                    <input type="text" id="doc_snils" placeholder="11 цифр" oninput="checkDocs(); removeError(this);">
-                    <span id="status_snils" class="doc-status">✔</span>
+            <div class="row">
+                <label>Твой ник:</label>
+                <div class="nick-input-container" id="wrap_username">
+                    <span class="nick-prefix">Холодник</span>
+                    <input type="text" id="username_custom" placeholder="Александр" oninput="saveNick(); removeError(this);">
                 </div>
             </div>
-            <div class="doc-row">
-                <span class="doc-label">Паспорт:</span>
-                <div class="doc-input-wrapper">
-                    <input type="text" id="doc_passport" placeholder="10 цифр" oninput="checkDocs(); removeError(this);">
-                    <span id="status_passport" class="doc-status">✔</span>
+
+            <div class="divider"></div>
+            <h3>Часть 1: Основа</h3>
+
+            <div class="row">
+                <label>Кассетка:</label>
+                <div class="row-inline">
+                    <button class="dmf-btn" id="dmf-plus" onclick="setDmf('+'); removeError(this);">[ + ]</button>
+                    <button class="dmf-btn" id="dmf-minus" onclick="setDmf('-'); removeError(this);">[ - ]</button>
                 </div>
             </div>
-            <div class="doc-row">
-                <span class="doc-label">ИНН:</span>
-                <div class="doc-input-wrapper">
-                    <input type="text" id="doc_inn" placeholder="12 цифр" oninput="checkDocs(); removeError(this);">
-                    <span id="status_inn" class="doc-status">✔</span>
+
+            <div class="row">
+                <label>ФИО и Дата рождения:</label>
+                <input type="text" id="fio_date" placeholder="Петров Алексей Владимирович 12.08.1996" oninput="processFIO(); removeError(this);">
+            </div>
+
+            <div class="row">
+                <label>Номер телефона и Оператор:</label>
+                <div id="operator_info_text" class="operator-info-text"></div>
+                
+                <div class="row-inline">
+                    <input type="text" id="client_phone" placeholder="+79008889911" style="flex: 1; min-width: 140px;" oninput="removeError(this); detectOperator(this);">
+                    <select id="operator_select" onchange="toggleOperatorInput();" style="width: 110px;">
+                        <option value="МТС">МТС</option>
+                        <option value="Мегафон">Мегафон</option>
+                        <option value="Билайн">Билайн</option>
+                        <option value="Теле2">Теле2</option>
+                        <option value="Йота">Йота</option>
+                        <option value="custom">Свой...</option>
+                    </select>
+                </div>
+                <input type="text" id="operator_custom" placeholder="Введи оператора вручную" style="display:none; margin-top:4px;" oninput="removeError(this);">
+            </div>
+
+            <button class="btn-small-copy basis" onclick="copyReport('basis')">📋 СКОПИРОВАТЬ ОСНОВУ</button>
+
+            <div class="divider"></div>
+            <h3>Часть 2: Доп. Инфо</h3>
+
+            <div class="row">
+                <label>Код и Организация (Если не Лента/2Берега — пиши вручную):</label>
+                <div class="row-inline">
+                    <input type="text" id="client_code" placeholder="4567" style="width: 65px;" oninput="removeError(this);">
+                    <input type="text" id="code_org" placeholder="Название" style="flex:1; min-width: 100px;" oninput="removeError(this);">
+                    <button class="fast-btn" onclick="setOrg('Лента')">Лента</button>
+                    <button class="fast-btn" onclick="setOrg('2Берега')">2Берега</button>
                 </div>
             </div>
-        </div>
 
-        <div class="row">
-            <label>На русском:</label>
-            <div class="toggle-group">
-                <div class="toggle-btn active good" id="lang-good" onclick="setLang(true)">хорошо</div>
-                <div class="toggle-btn" id="lang-bad" onclick="setLang(false)">плохо</div>
+            <div class="row">
+                <label>Документы (введите номер, зеленая галочка подтвердит формат):</label>
+                <div class="doc-row">
+                    <span class="doc-label">СНИЛС:</span>
+                    <div class="doc-input-wrapper">
+                        <input type="text" id="doc_snils" placeholder="11 цифр" oninput="checkDocs(); removeError(this);">
+                        <span id="status_snils" class="doc-status">✔</span>
+                    </div>
+                </div>
+                <div class="doc-row">
+                    <span class="doc-label">Паспорт:</span>
+                    <div class="doc-input-wrapper">
+                        <input type="text" id="doc_passport" placeholder="10 цифр" oninput="checkDocs(); removeError(this);">
+                        <span id="status_passport" class="doc-status">✔</span>
+                    </div>
+                </div>
+                <div class="doc-row">
+                    <span class="doc-label">ИНН:</span>
+                    <div class="doc-input-wrapper">
+                        <input type="text" id="doc_inn" placeholder="12 цифр" oninput="checkDocs(); removeError(this);">
+                        <span id="status_inn" class="doc-status">✔</span>
+                    </div>
+                </div>
             </div>
+
+            <div class="row">
+                <label>На русском:</label>
+                <div class="toggle-group">
+                    <div class="toggle-btn active good" id="lang-good" onclick="setLang(true)">хорошо</div>
+                    <div class="toggle-btn" id="lang-bad" onclick="setLang(false)">плохо</div>
+                </div>
+            </div>
+
+            <div class="row">
+                <label>Почта:</label>
+                <input type="text" id="email" placeholder="example@mail.ru" oninput="removeError(this);">
+            </div>
+            <div class="row">
+                <label>Мой номер (Обязательно укажи детали после номера!):</label>
+                <input type="text" id="my_phone" placeholder="+79225556677 10:20 1:45" oninput="removeError(this);">
+            </div>
+            <div class="row">
+                <label>Описание:</label>
+                <textarea id="description" placeholder="Краткий контекст по клиенту" oninput="removeError(this);"></textarea>
+            </div>
+
+            <button class="btn-small-copy part2" onclick="copyReport('part2')">🔸 СКОПИРОВАТЬ ВТОРУЮ ЧАСТЬ</button>
+
+            <div class="divider"></div>
+            <button class="action-btn btn-full" onclick="copyReport('full')">🚀 СКОПИРОВАТЬ ПОЛНЫЙ ОТЧЁТ</button>
+            <button class="action-btn btn-clear" onclick="clearForm()">🧹 ОЧИСТИТЬ ФОРМУ</button>
         </div>
 
-        <div class="row">
-            <label>Почта:</label>
-            <input type="text" id="email" placeholder="example@mail.ru" oninput="removeError(this);">
+        <!-- ВКЛАДКА 2: ПРОБИВ АДРЕСА -->
+        <div id="tab-address" class="tab-content">
+            <div class="row">
+                <label>Сырой текст отчета:</label>
+                <textarea id="raw-report-input" rows="8" placeholder="Вставь сюда скопированный текст отчета (Ctrl+V)..." style="width: 100%; background: var(--input-bg); color: var(--input-text); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; font-size: 13px; outline: none; resize: vertical;"></textarea>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button id="btn-analyze-addr" onclick="analyzeReportAddress()" style="flex: 1; background: var(--accent-color); color: #000; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 14px;">Определить адрес</button>
+                <button onclick="document.getElementById('raw-report-input').value=''; document.getElementById('addr-result-box').style.display='none';" style="background: var(--input-bg); color: var(--text-color); border: 1px solid var(--border-color); padding: 12px 15px; border-radius: 8px; font-weight: bold; cursor: pointer;">Очистить</button>
+            </div>
+            <div id="addr-result-box" style="margin-top: 10px; background: var(--input-bg); border-left: 4px solid var(--accent-color); padding: 15px; border-radius: 8px; display: none; white-space: pre-wrap; font-size: 13px; line-height: 1.5; border-top: 1px solid var(--border-color); border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);"></div>
         </div>
-        <div class="row">
-            <label>Мой номер (Обязательно укажи детали после номера!):</label>
-            <input type="text" id="my_phone" placeholder="+79225556677 10:20 1:45" oninput="removeError(this);">
-        </div>
-        <div class="row">
-            <label>Описание:</label>
-            <textarea id="description" placeholder="Краткий контекст по клиенту" oninput="removeError(this);"></textarea>
-        </div>
-
-        <button class="btn-small-copy part2" onclick="copyReport('part2')">🔸 СКОПИРОВАТЬ ВТОРУЮ ЧАСТЬ</button>
-
-        <div class="divider"></div>
-        <button class="action-btn btn-full" onclick="copyReport('full')">🚀 СКОПИРОВАТЬ ПОЛНЫЙ ОТЧЁТ</button>
-        <button class="action-btn btn-clear" onclick="clearForm()">🧹 ОЧИСТИТЬ ФОРМУ</button>
 
         <div class="footer-credits">
             Нашли баг или есть идея? ТГ: <a href="https://t.me/aivenos" target="_blank">@x007am98</a>
@@ -261,10 +310,14 @@
     </div>
 
 <script>
+    // ВСТАВЬ СЮДА ССЫЛКУ НА СВОЙ GOOGLE APPS SCRIPT:
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxLtBza1VmgQIJZmqACz4ZQRya5cTKfawfkxIjDhlMu4yGUHv0km4eDZIjHcqzFJI56mQ/exec";
+
     let dmfSelection = '';
     let isRussianGood = true;
     let activeAnimation = null;
     let operatorTimeout = null;
+    let savedAdminPass = "";
 
     window.onload = function() {
         if(localStorage.getItem('saved_only_name')) document.getElementById('username_custom').value = localStorage.getItem('saved_only_name');
@@ -272,6 +325,120 @@
         checkDocs();
     }
 
+    // --- ЛОГИКА АВТОРИЗАЦИИ И ОДНОРАЗОВЫХ ПАРОЛЕЙ ---
+    async function submitSiteLogin() {
+        const pass = document.getElementById('auth-pass-input').value.trim();
+        const btn = document.getElementById('auth-btn');
+        const err = document.getElementById('auth-error');
+        if (!pass) return;
+
+        btn.disabled = true;
+        btn.innerText = "Проверка...";
+        err.style.display = "none";
+
+        try {
+            const res = await fetch(GOOGLE_SCRIPT_URL, {
+                method: "POST",
+                body: JSON.stringify({ action: "login", password: pass })
+            });
+            const data = await res.json();
+
+            if (data.status === "ok") {
+                document.getElementById('auth-overlay').style.display = "none";
+                if (data.role === "admin") {
+                    savedAdminPass = pass;
+                    document.getElementById('admin-otp-panel').style.display = "block";
+                    document.getElementById('current-otp-display').innerText = data.current_otp;
+                    setInterval(pollCurrentOtp, 4000);
+                }
+            } else {
+                err.innerText = data.message || "Неверный или уже использованный пароль";
+                err.style.display = "block";
+            }
+        } catch (e) {
+            err.innerText = "Ошибка соединения с сервером";
+            err.style.display = "block";
+        } finally {
+            btn.disabled = false;
+            btn.innerText = "Войти";
+        }
+    }
+
+    async function pollCurrentOtp() {
+        if (!savedAdminPass) return;
+        try {
+            const res = await fetch(GOOGLE_SCRIPT_URL, {
+                method: "POST",
+                body: JSON.stringify({ action: "get_otp", admin_pass: savedAdminPass })
+            });
+            const data = await res.json();
+            if (data.status === "ok" && data.current_otp) {
+                document.getElementById('current-otp-display').innerText = data.current_otp;
+            }
+        } catch (e) {}
+    }
+
+    async function forceRegenOtp() {
+        const res = await fetch(GOOGLE_SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify({ action: "regen_otp", admin_pass: savedAdminPass })
+        });
+        const data = await res.json();
+        if (data.status === "ok") document.getElementById('current-otp-display').innerText = data.current_otp;
+    }
+
+    function copyOtpCode() {
+        const code = document.getElementById('current-otp-display').innerText;
+        navigator.clipboard.writeText(code);
+        showToast("✅ Одноразовый пароль скопирован");
+    }
+
+    function switchTab(tabName) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        
+        if (tabName === 'report') {
+            document.querySelectorAll('.tab-btn')[0].classList.add('active');
+            document.getElementById('tab-report').classList.add('active');
+        } else {
+            document.querySelectorAll('.tab-btn')[1].classList.add('active');
+            document.getElementById('tab-address').classList.add('active');
+        }
+    }
+
+    // --- АНАЛИЗ АДРЕСА ЧЕРЕЗ СЕРВЕР ---
+    async function analyzeReportAddress() {
+        const text = document.getElementById('raw-report-input').value.trim();
+        const resBox = document.getElementById('addr-result-box');
+        const btn = document.getElementById('btn-analyze-addr');
+
+        if (!text) return;
+
+        btn.disabled = true;
+        btn.innerText = "⏳ Анализируем...";
+        resBox.style.display = "block";
+        resBox.innerText = "Отсеиваем мусор, сверяем даты доставок и проверяем дома...";
+
+        try {
+            const response = await fetch(GOOGLE_SCRIPT_URL, {
+                method: "POST",
+                body: JSON.stringify({
+                    action: "analyze_address",
+                    report: text
+                })
+            });
+
+            const data = await response.json();
+            resBox.innerText = data.result || "Ошибка: пустой ответ от сервера.";
+        } catch (err) {
+            resBox.innerText = "Ошибка соединения: " + err.message;
+        } finally {
+            btn.disabled = false;
+            btn.innerText = "Определить адрес";
+        }
+    }
+
+    // --- ПРОВЕРКА ОПЕРАТОРА ТЕЛЕФОНА ---
     async function detectOperator(inputEl) {
         let phone = inputEl.value.replace(/\D/g, ''); 
         const infoText = document.getElementById('operator_info_text');
@@ -284,15 +451,16 @@
         clearTimeout(operatorTimeout);
         
         operatorTimeout = setTimeout(async () => {
-            const scriptUrl = "https://script.google.com/macros/s/AKfycbxLtBza1VmgQIJZmqACz4ZQRya5cTKfawfkxIjDhlMu4yGUHv0km4eDZIjHcqzFJI56mQ/exec"; 
-            
             const customOpInput = document.getElementById('operator_custom');
             const selectOp = document.getElementById('operator_select');
             
             try {
                 infoText.innerHTML = '⏳ Определяем оператора и регион...';
                 
-                const response = await fetch(`${scriptUrl}?phone=${phone}`);
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: "POST",
+                    body: JSON.stringify({ phone: phone })
+                });
                 if (!response.ok) throw new Error('Ошибка связи с сервером');
                 
                 const data = await response.json();
